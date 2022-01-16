@@ -141,8 +141,6 @@ end
 -- BUTTON
 lsglil2.RegisterElement("button", {
 	["col"] = {0.1, 0.1, 0.3, 1},
-	["colHover"] = {0.2, 0.2, 0.4, 1},
-	["colClick"] = {0.4, 0.4, 0.8, 1},
 	["text"] = "Label",
 	["touching"] = false,
 	["hasPressed"] = false,
@@ -165,9 +163,9 @@ function(time, edata, touching)
 	local currCol = {0, 0, 0}
 	if touching then
 		if love.mouse.isDown(1) then
-			currCol = edata["colClick"]
+			currCol = {edata["col"][1] + 0.2, edata["col"][2] + 0.2, edata["col"][3] + 0.2}
 		else
-			currCol = edata["colHover"]
+			currCol = {edata["col"][1] + 0.1, edata["col"][2] + 0.1, edata["col"][3] + 0.1}
 		end
 	else
 		currCol = edata["col"]

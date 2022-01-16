@@ -1,0 +1,1 @@
+EGPOBJR = EGPOBJR or {}
