@@ -3,74 +3,8 @@ EGPD2.Objects = {}
 EGPD2.CurrObjectType = "box"
 EGPD2.CurrZoom = 1
 EGPD2.CurrPosOffset = {0, 0}
-
-
-function EGPD2.Initlsgil2Buttons()
-	lsglil2.NewObject("ButtonTypeBox", "button")
-	lsglil2.SetObjectPosition("ButtonTypeBox", 4, 32)
-	lsglil2.SetObjectScale("ButtonTypeBox", 118, 32)
-	lsglil2.SetObjectData("ButtonTypeBox", "text", "Box")
-	lsglil2.SetObjectData("ButtonTypeBox", "col", {0.2, 0.4, 0.2})
-	lsglil2.SetObjectData("ButtonTypeBox", "onPress", function(GUITime)
-		EGPD2.CurrObjectType = "box"
-	end)
-
-	lsglil2.NewObject("ButtonTypeTriangle", "button")
-	lsglil2.SetObjectPosition("ButtonTypeTriangle", 4, 64 + 8)
-	lsglil2.SetObjectScale("ButtonTypeTriangle", 118, 32)
-	lsglil2.SetObjectData("ButtonTypeTriangle", "text", "Triangle")
-	lsglil2.SetObjectData("ButtonTypeTriangle", "col", {0.2, 0.4, 0.2})
-	lsglil2.SetObjectData("ButtonTypeTriangle", "onPress", function(GUITime)
-		EGPD2.CurrObjectType = "triangle"
-	end)
-
-	lsglil2.NewObject("ButtonTypeCircle", "button")
-	lsglil2.SetObjectPosition("ButtonTypeCircle", 4, 96 + 16)
-	lsglil2.SetObjectScale("ButtonTypeCircle", 118, 32)
-	lsglil2.SetObjectData("ButtonTypeCircle", "text", "Circle")
-	lsglil2.SetObjectData("ButtonTypeCircle", "col", {0.2, 0.4, 0.2})
-	lsglil2.SetObjectData("ButtonTypeCircle", "onPress", function(GUITime)
-		EGPD2.CurrObjectType = "circle"
-	end)
-
-
-	lsglil2.NewObject("ButtonTypeConvexPoly", "button")
-	lsglil2.SetObjectPosition("ButtonTypeConvexPoly", 4, 128 + 24)
-	lsglil2.SetObjectScale("ButtonTypeConvexPoly", 118, 32)
-	lsglil2.SetObjectData("ButtonTypeConvexPoly", "text", "Polygon (Convex)")
-	lsglil2.SetObjectData("ButtonTypeConvexPoly", "col", {0.2, 0.2, 0.4})
-	lsglil2.SetObjectData("ButtonTypeConvexPoly", "onPress", function(GUITime)
-		EGPD2.CurrObjectType = "convexpoly"
-	end)
-
-
-	lsglil2.NewObject("ButtonTypeConcavePoly", "button")
-	lsglil2.SetObjectPosition("ButtonTypeConcavePoly", 4, 160 + 32)
-	lsglil2.SetObjectScale("ButtonTypeConcavePoly", 118, 32)
-	lsglil2.SetObjectData("ButtonTypeConcavePoly", "text", "Polygon (Concave)")
-	lsglil2.SetObjectData("ButtonTypeConcavePoly", "col", {0.2, 0.2, 0.4})
-	lsglil2.SetObjectData("ButtonTypeConcavePoly", "onPress", function(GUITime)
-		EGPD2.CurrObjectType = "concavepoly"
-	end)
-
-	lsglil2.NewObject("ButtonTypeLine", "button")
-	lsglil2.SetObjectPosition("ButtonTypeLine", 4, 192 + 40)
-	lsglil2.SetObjectScale("ButtonTypeLine", 118, 32)
-	lsglil2.SetObjectData("ButtonTypeLine", "text", "Line")
-	lsglil2.SetObjectData("ButtonTypeLine", "col", {0.4, 0.2, 0.2})
-	lsglil2.SetObjectData("ButtonTypeLine", "onPress", function(GUITime)
-		EGPD2.CurrObjectType = "line"
-	end)
-
-	lsglil2.NewObject("ButtonTypePoint", "button")
-	lsglil2.SetObjectPosition("ButtonTypePoint", 4, 224 + 48)
-	lsglil2.SetObjectScale("ButtonTypePoint", 118, 32)
-	lsglil2.SetObjectData("ButtonTypePoint", "text", "Point")
-	lsglil2.SetObjectData("ButtonTypePoint", "col", {0.4, 0.2, 0.2})
-	lsglil2.SetObjectData("ButtonTypePoint", "onPress", function(GUITime)
-		EGPD2.CurrObjectType = "point"
-	end)
-end
+EGPD2.CenterPos = {640, 256}
+EGPD2.ExportName = "exported"
 
 
 
@@ -85,8 +19,8 @@ function EGPD2.DrawCenteredQ(tex, quad, x, y, r, sx, sy)
 end
 
 local function toCentered(x, y)
-	local cx = 640
-	local cy = 256
+	local cx = EGPD2.CenterPos[1]
+	local cy = EGPD2.CenterPos[2]
 	return x - cx, y - cy
 end
 

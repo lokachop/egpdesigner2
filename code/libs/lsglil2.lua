@@ -202,7 +202,7 @@ end
 
 -- TEXT ENTRY
 lsglil2.RegisterElement("textentry", {
-	["text"] = "Text",
+	["text"] = "",
 	["backgroundtext"] = "Type here...",
 	["active"] = false,
 	["releasecall"] = function() end
