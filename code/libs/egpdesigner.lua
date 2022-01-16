@@ -3,10 +3,21 @@ EGPD2.Objects = {}
 EGPD2.CurrObjectType = "box"
 EGPD2.CurrZoom = 1
 EGPD2.CurrPosOffset = {0, 0}
-EGPD2.CenterPos = {640, 256}
+EGPD2.CenterPos = {384, 256}
 EGPD2.ExportName = "exported"
+EGPD2.ImageBase = love.graphics.newImage("res/image.png")
 
 
+function EGPD2.HandleMoving(x, y, dx, dy)
+	if love.mouse.isDown(3) then
+		EGPD2.CurrPosOffset[1] = EGPD2.CurrPosOffset[1] - dx
+		EGPD2.CurrPosOffset[2] = EGPD2.CurrPosOffset[2] - dy
+	end
+end
+
+function EGPD2.HandleZooming(x, y)
+	EGPD2.CurrZoom = EGPD2.CurrZoom + (y / 32)
+end
 
 
 local bgtex = love.graphics.newImage("res/background.png")
@@ -26,10 +37,20 @@ end
 
 function EGPD2.RenderBackground()
 	love.graphics.setColor(1, 1, 1, 1)
-	local cx, cy = toCentered(EGPD2.CurrPosOffset[1], EGPD2.CurrPosOffset[2])
+	local cx, cy = EGPD2.CurrPosOffset[1], EGPD2.CurrPosOffset[2]--toCentered(EGPD2.CurrPosOffset[1], EGPD2.CurrPosOffset[2])
 
-	bgquad:setViewport(cx / (EGPD2.CurrZoom * 2.5), cy / (EGPD2.CurrZoom * 1), 512 / EGPD2.CurrZoom, 512 / EGPD2.CurrZoom)
+	bgquad:setViewport(cx / EGPD2.CurrZoom, cy / EGPD2.CurrZoom, 512 / EGPD2.CurrZoom, 512 / EGPD2.CurrZoom)
 	EGPD2.DrawCenteredQ(bgtex, bgquad, 384, 256, 0, EGPD2.CurrZoom, EGPD2.CurrZoom)
+end
+
+function EGPD2.RenderImageBase()
+	local iw, ih = EGPD2.ImageBase:getDimensions()
+	love.graphics.setColor(1, 1, 1, 1)
+	local x, y = toCentered(EGPD2.CurrPosOffset[1], EGPD2.CurrPosOffset[2])
+	local cx = -x - (iw / 2)
+	local cy = -y - (ih / 2)
+	love.graphics.draw(EGPD2.ImageBase, cx, cy, 0, EGPD2.CurrZoom, EGPD2.CurrZoom)
+
 end
 
 

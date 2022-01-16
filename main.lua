@@ -9,8 +9,7 @@ end
 function love.update(dt) -- dt is deltatime
 	Time = Time + dt
 	lsglil2.Update(dt)
-	EGPD2.CurrPosOffset[1] = math.sin(Time) * 512
-	EGPD2.CurrZoom = math.cos(Time * 0.5) + 1
+	--EGPD2.CurrZoom = math.cos(Time * 0.5) + 1
 end
 
 function love.textinput(t)
@@ -31,7 +30,17 @@ end
 
 function love.draw() -- draw
 	EGPD2.RenderBackground()
+	EGPD2.RenderImageBase()
 	EGPD2.RenderBorderElements()
 	EGPD2.RenderInformation()
 	lsglil2.DrawElements()
+end
+
+
+function love.mousemoved(x, y, dx, dy)
+	EGPD2.HandleMoving(x, y, dx, dy)
+end
+
+function love.wheelmoved(x, y)
+	EGPD2.HandleZooming(x, y)
 end

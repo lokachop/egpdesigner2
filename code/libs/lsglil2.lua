@@ -395,7 +395,7 @@ end
 
 function lsglil2.UpdateTextEntry(t)
 	if lsglil2.Flags.TextEntry.CurrentUsing ~= "" then
-		printIfDebug("added text \"" .. t .. "\" to \"" .. lsglil2.Flags.TextEntry.CurrentUsing .. "\"")
+		printIfDebug("[LSGLIL2]: added text \"" .. t .. "\" to \"" .. lsglil2.Flags.TextEntry.CurrentUsing .. "\"")
 		lsglil2.DrawableElements[lsglil2.Flags.TextEntry.CurrentUsing].Data["text"] = lsglil2.DrawableElements[lsglil2.Flags.TextEntry.CurrentUsing].Data["text"] .. t
 		return 1
 	end
