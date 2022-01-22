@@ -355,6 +355,17 @@ function lsglil2.CheckIsTouching(obj)
 	end
 end
 
+function lsglil2.HasPressedButton(x, y)
+	for k, v in pairs(lsglil2.DrawableElements) do
+		local touch = lsglil2.CheckIsTouching(v.id)
+
+		if touch then
+			return true
+		end
+	end
+	return false
+end
+
 function lsglil2.Update(dt)
 	lsglil2.GUITime = lsglil2.GUITime + dt
 

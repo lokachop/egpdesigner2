@@ -8,19 +8,43 @@ EGPD2.ExportName = "exported"
 EGPD2.ImageBase = love.graphics.newImage("res/image.png")
 EGPD2.DrawModeActive = false
 
-EGPD2.PresetTableCopiesForTypes = {}
-EGPD2.PresetTableCopiesForTypes["box"] = {
+EGPD2.BaseObjectProperties = {
 	id = 0,
 	x = 0,
 	y = 0,
-	type = "box",
-	w = 16,
-	h = 16,
+	type "undefined :(",
 	r = 255,
 	g = 255,
 	b = 255,
-	a = 255
+	a = 255,
+	drawtype = "undefined"
 }
+
+
+EGPD2.PresetTableCopiesForTypes = {}
+EGPD2.PresetTableCopiesForTypes["box"] = {
+	type = "box",
+	w = 16,
+	h = 16,
+	drawtype = "nopoly"
+}
+
+
+EGPD2.PresetTableCopiesForTypes["circle"] = {
+	type = "circle",
+	w = 16,
+	h = 16,
+	drawtype = "nopoly",
+	fidelity = 32
+}
+
+for k, v in pairs(EGPD2.PresetTableCopiesForTypes) do
+	for k2, v2 in pairs(EGPD2.BaseObjectProperties) do
+		if EGPD2.PresetTableCopiesForTypes[k][k2] == nil then
+			EGPD2.PresetTableCopiesForTypes[k][k2] = v2
+		end
+	end
+end
 
 function EGPD2.HandleMoving(x, y, dx, dy)
 	if love.mouse.isDown(3) then
@@ -37,7 +61,8 @@ function EGPD2.HandleZooming(x, y)
 	end
 end
 
-function EGPD2.CreateObjectNoPoly(x, y, id)
+EGPD2.ObjectCreators = {}
+EGPD2.ObjectCreators["nopoly"] = function(x, y, id)
 	local tblcopy = {}
 	for k, v in pairs(EGPD2.PresetTableCopiesForTypes[EGPD2.CurrObjectType]) do
 		tblcopy[k] = v
@@ -51,6 +76,10 @@ function EGPD2.CreateObjectNoPoly(x, y, id)
 end
 
 
+function EGPD2.CreateObjectCurrSelected(x, y, id)
+	pcall(EGPD2.ObjectCreators[EGPD2.PresetTableCopiesForTypes[EGPD2.CurrObjectType].drawtype], x, y, id)
+end
+
 
 function EGPD2.HandleDrawing(x, y, button)
 	if button == 1 then
@@ -58,7 +87,7 @@ function EGPD2.HandleDrawing(x, y, button)
 		local offy = EGPD2.CurrPosOffset[2] + EGPD2.CenterPos[2]
 		local tx = (x - offx) / EGPD2.CurrZoom
 		local ty = (y - offy) / EGPD2.CurrZoom
-		EGPD2.CreateObjectNoPoly(tx, ty, #EGPD2.Objects + 1)
+		EGPD2.CreateObjectCurrSelected(tx, ty, #EGPD2.Objects + 1)
 	end
 end
 
