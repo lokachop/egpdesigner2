@@ -6,7 +6,7 @@ EGPD2.CurrPosOffset = {0, 0}
 EGPD2.CenterPos = {384, 256}
 EGPD2.ExportName = "exported"
 EGPD2.ImageBase = love.graphics.newImage("res/image.png")
-
+EGPD2.DrawModeActive = false
 
 EGPD2.PresetTableCopiesForTypes = {}
 EGPD2.PresetTableCopiesForTypes["box"] = {
@@ -54,7 +54,11 @@ end
 
 function EGPD2.HandleDrawing(x, y, button)
 	if button == 1 then
-		EGPD2.CreateObjectNoPoly(0, 0, 1)
+		local offx = EGPD2.CurrPosOffset[1] + EGPD2.CenterPos[1]
+		local offy = EGPD2.CurrPosOffset[2] + EGPD2.CenterPos[2]
+		local tx = (x - offx) / EGPD2.CurrZoom
+		local ty = (y - offy) / EGPD2.CurrZoom
+		EGPD2.CreateObjectNoPoly(tx, ty, #EGPD2.Objects + 1)
 	end
 end
 
@@ -66,7 +70,6 @@ function EGPD2.StartTranslatedStuff()
 	love.graphics.push()
 	love.graphics.translate(EGPD2.CurrPosOffset[1] + EGPD2.CenterPos[1], EGPD2.CurrPosOffset[2] + EGPD2.CenterPos[2])
 	love.graphics.scale(EGPD2.CurrZoom, EGPD2.CurrZoom)
-	--love.graphics.translate(-EGPD2.CurrPosOffset[1], -EGPD2.CurrPosOffset[2])
 end
 
 function EGPD2.EndTranslatedStuff()
@@ -77,6 +80,7 @@ function EGPD2.RenderImageBase()
 	local iw, ih = EGPD2.ImageBase:getDimensions()
 	love.graphics.setColor(1, 1, 1, 1)
 
+	love.graphics.draw(EGPD2.ImageBase, -iw / 2, -ih / 2)
 
 
 end
