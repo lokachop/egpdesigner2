@@ -47,21 +47,6 @@ for k, v in pairs(EGPD2.PresetTableCopiesForTypes) do
 	end
 end
 
-function EGPD2.HandleMoving(x, y, dx, dy)
-	if love.mouse.isDown(3) then
-		EGPD2.CurrPosOffset[1] = EGPD2.CurrPosOffset[1] + dx
-		EGPD2.CurrPosOffset[2] = EGPD2.CurrPosOffset[2] + dy
-	end
-end
-
-function EGPD2.HandleZooming(x, y)
-	if y > 0 then
-		EGPD2.CurrZoom = EGPD2.CurrZoom * 1.1
-	else
-		EGPD2.CurrZoom = EGPD2.CurrZoom / 1.1
-	end
-end
-
 EGPD2.ObjectCreators = {}
 EGPD2.ObjectCreators["nopoly"] = function(x, y, id)
 	local tblcopy = {}
@@ -90,21 +75,29 @@ function EGPD2.MouseToScreen(x, y)
 	return tx, ty
 end
 
-function EGPD2.HandleDrawing(x, y, button)
-	if button == 1 then
-		local tx, ty = EGPD2.MouseToScreen(x, y)
-		local id = #EGPD2.Objects + 1
-		EGPD2.CreateObjectCurrSelected(tx, ty, id)
-		EGPD2.SelectedObject = id
-	end
+function EGPD2.FormatStringToNum(str)
+	local strf = string.gsub(str, "%D", "")
+	return tonumber(strf) or 0
 end
 
-function EGPD2.HandleInputs(key)
-	if key == "space" then
-		EGPD2.AddModeActive = not EGPD2.AddModeActive
+local function checkValid(obj)
+	if obj.w == nil then
+		print("invalid touchable")
+		return false
 	end
+
+	return true
 end
 
-function EGPD2.CheckTouchingObject()
+local function inrange(num, min, max)
+	return num >= min and num <= max
+end
 
+function EGPD2.CheckTouchingObject(x, y)
+	local mx, my = EGPD2.MouseToScreen(x, y)
+	for k, v in pairs(EGPD2.Objects) do
+		if checkValid(v) and inrange(mx, v.x - v.w / 2, v.x + v.w / 2) and inrange(my, v.y - v.h / 2, v.y + v.h / 2) then
+			return k
+		end
+	end
 end

@@ -23,11 +23,31 @@ function EGPD2.HandleDrawing(x, y, button)
 		local id = #EGPD2.Objects + 1
 		EGPD2.CreateObjectCurrSelected(tx, ty, id)
 		EGPD2.SelectedObject = id
+		EGPD2.MakeUIForObjectProperties()
 	end
 end
 
 function EGPD2.HandleInputs(key)
 	if key == "space" then
 		EGPD2.AddModeActive = not EGPD2.AddModeActive
+	end
+end
+
+function EGPD2.HandleSelecting(x, y, button)
+	if button == 1 then
+		local obj = EGPD2.CheckTouchingObject(x, y)
+		if obj == nil then
+			return
+		end
+		EGPD2.MakeUIForObjectProperties()
+	end
+end
+
+
+function EGPD2.HandleMouse(x, y, button)
+	if EGPD2.AddModeActive then
+		EGPD2.HandleDrawing(x, y, button)
+	else
+		EGPD2.HandleSelecting(x, y, button)
 	end
 end

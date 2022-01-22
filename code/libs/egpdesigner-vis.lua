@@ -1,7 +1,5 @@
 EGPD2 = EGPD2 or {}
 
-
-
 function EGPD2.StartTranslatedStuff()
 	love.graphics.push()
 	love.graphics.translate(EGPD2.CurrPosOffset[1] + EGPD2.CenterPos[1], EGPD2.CurrPosOffset[2] + EGPD2.CenterPos[2])
@@ -46,22 +44,32 @@ function EGPD2.RenderBorderElements()
 	local textcol = {0.6, 0.6, 1}
 
 	love.graphics.setColor(backgroundcol[1], backgroundcol[2], backgroundcol[3], 1)
-	love.graphics.rectangle("fill", 0, 0, 128, 512)
-	love.graphics.rectangle("fill", 640, 0, 128, 512)
+	love.graphics.rectangle("fill", 0, 0, 128, 512) -- left rect
+	love.graphics.rectangle("fill", 640, 0, 128, 512) -- right rect
+	love.graphics.rectangle("fill", 768, 0, 128, 640) -- right rect 2
 
-	love.graphics.rectangle("fill", 0, 512, 768, 128)
+
+	love.graphics.rectangle("fill", 0, 512, 768, 128) -- bottom rect
+
+
 
 
 	love.graphics.setColor(outlinecol[1], outlinecol[2], outlinecol[3], 1)
-	love.graphics.rectangle("line", 0, 0, 128, 512)
-	love.graphics.rectangle("line", 640, 0, 128, 512)
+	love.graphics.rectangle("line", 0, 0, 128, 512) -- left rect
+	love.graphics.rectangle("line", 640, 0, 128, 512) -- right rect
+	love.graphics.rectangle("line", 768, 0, 128, 640) -- right rect 2
 
-	love.graphics.rectangle("line", 0, 512, 768, 128)
+	love.graphics.rectangle("line", 0, 512, 768, 128) -- bottom rect
+
+	love.graphics.line(640, 32, 768 + 128, 32)
+
 
 
 	love.graphics.setColor(textcol[1], textcol[2], textcol[3], 1)
 	love.graphics.printf("Object type selector", 0, 0, 128, "center")
 	love.graphics.printf("Object data", 640, 0, 128, "center")
+
+	love.graphics.printf("Object list", 768, 0, 128, "center")
 end
 
 
@@ -83,5 +91,5 @@ function EGPD2.RenderInformation()
 		typeobject = EGPD2.Objects[EGPD2.SelectedObject].type
 	end
 
-	love.graphics.printf("OBJECT " .. EGPD2.SelectedObject .. " (" .. typeobject .. ")", 640, 16, 128, "center")
+	love.graphics.printf("OBJECT " .. tostring(EGPD2.SelectedObject) .. " (" .. typeobject .. ")", 640, 16, 128, "center")
 end
