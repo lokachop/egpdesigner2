@@ -23,15 +23,15 @@ end
 function love.keypressed(key)
 	local cancel lsglil2.UpdateTextEntryKeyPress(key)
 	if not cancel then
-		return
+		EGPD2.HandleInputs(key)
 		-- code to run if user isnt on a text entry
 	end
 end
 
 function love.draw() -- draw
+	--EGPD2.RenderBackground() -- scrapped, looks disgusting
 	EGPD2.StartTranslatedStuff()
 
-	--EGPD2.RenderBackground()
 	EGPD2.RenderImageBase()
 	EGPD2.RenderObjects()
 

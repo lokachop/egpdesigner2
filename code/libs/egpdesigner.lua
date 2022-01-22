@@ -6,7 +6,8 @@ EGPD2.CurrPosOffset = {0, 0}
 EGPD2.CenterPos = {384, 256}
 EGPD2.ExportName = "exported"
 EGPD2.ImageBase = love.graphics.newImage("res/image.png")
-EGPD2.DrawModeActive = false
+EGPD2.AddModeActive = false
+EGPD2.SelectedObject = 0
 
 EGPD2.BaseObjectProperties = {
 	id = 0,
@@ -80,20 +81,30 @@ function EGPD2.CreateObjectCurrSelected(x, y, id)
 	pcall(EGPD2.ObjectCreators[EGPD2.PresetTableCopiesForTypes[EGPD2.CurrObjectType].drawtype], x, y, id)
 end
 
+function EGPD2.MouseToScreen(x, y)
+	local offx = EGPD2.CurrPosOffset[1] + EGPD2.CenterPos[1]
+	local offy = EGPD2.CurrPosOffset[2] + EGPD2.CenterPos[2]
+	local tx = (x - offx) / EGPD2.CurrZoom
+	local ty = (y - offy) / EGPD2.CurrZoom
+
+	return tx, ty
+end
 
 function EGPD2.HandleDrawing(x, y, button)
 	if button == 1 then
-		local offx = EGPD2.CurrPosOffset[1] + EGPD2.CenterPos[1]
-		local offy = EGPD2.CurrPosOffset[2] + EGPD2.CenterPos[2]
-		local tx = (x - offx) / EGPD2.CurrZoom
-		local ty = (y - offy) / EGPD2.CurrZoom
-		EGPD2.CreateObjectCurrSelected(tx, ty, #EGPD2.Objects + 1)
+		local tx, ty = EGPD2.MouseToScreen(x, y)
+		local id = #EGPD2.Objects + 1
+		EGPD2.CreateObjectCurrSelected(tx, ty, id)
+		EGPD2.SelectedObject = id
 	end
 end
 
---local bgtex = love.graphics.newImage("res/background.png")
---bgtex:setWrap("repeat", "repeat")
---local bgquad = love.graphics.newQuad(0, 0, 512, 512, 512, 512)
+function EGPD2.HandleInputs(key)
+	if key == "space" then
+		EGPD2.AddModeActive = not EGPD2.AddModeActive
+	end
+end
+
 
 function EGPD2.StartTranslatedStuff()
 	love.graphics.push()
@@ -104,6 +115,20 @@ end
 function EGPD2.EndTranslatedStuff()
 	love.graphics.pop()
 end
+
+--[[
+
+-- scrapped, looks disgusting
+
+--local bgtex = love.graphics.newImage("res/background.png")
+--bgtex:setWrap("repeat", "repeat")
+--local bgquad = love.graphics.newQuad(0, 0, 512, 512, 512, 512)
+function EGPD2.RenderBackground()
+	love.graphics.setColor(1, 1, 1, 1)
+	bgquad:setViewport(0, 0, 512, 512, 512 * EGPD2.CurrZoom, 512 * EGPD2.CurrZoom)
+	love.graphics.draw(bgtex, bgquad, 384, 256, 0, 1, 1, 256, 256)
+end
+]]
 
 function EGPD2.RenderImageBase()
 	local iw, ih = EGPD2.ImageBase:getDimensions()
@@ -154,4 +179,13 @@ function EGPD2.RenderInformation()
 	local zoomstring = "\n current zoom: x" .. tostring(EGPD2.CurrZoom)
 
 	love.graphics.printf(typestring .. posstring .. zoomstring, 128, 0, 511, "right")
+
+
+	love.graphics.printf("addmode: " .. tostring(EGPD2.AddModeActive), 128, 496, 511, "center")
+	local typeobject = "nil"
+	if EGPD2.Objects[EGPD2.SelectedObject] then
+		typeobject = EGPD2.Objects[EGPD2.SelectedObject].type
+	end
+
+	love.graphics.printf("OBJECT " .. EGPD2.SelectedObject .. " (" .. typeobject .. ")", 640, 16, 128, "center")
 end
