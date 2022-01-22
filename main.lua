@@ -29,13 +29,22 @@ function love.keypressed(key)
 end
 
 function love.draw() -- draw
-	EGPD2.RenderBackground()
+	EGPD2.StartTranslatedStuff()
+
+	--EGPD2.RenderBackground()
 	EGPD2.RenderImageBase()
+	EGPD2.RenderObjects()
+
+	EGPD2.EndTranslatedStuff()
+
 	EGPD2.RenderBorderElements()
 	EGPD2.RenderInformation()
 	lsglil2.DrawElements()
 end
 
+function love.mousepressed(x, y, button, istouch, presses)
+	EGPD2.HandleDrawing(x, y, button)
+end
 
 function love.mousemoved(x, y, dx, dy)
 	EGPD2.HandleMoving(x, y, dx, dy)
