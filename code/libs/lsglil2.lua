@@ -27,7 +27,6 @@ local function printIfDebug(...)
 	if lsglil2.DoDebugPrints then
 		print(...)
 	end
-
 end
 
 local function searchOnDirectoryAndLoad(dir, ldir)
