@@ -30,10 +30,19 @@ EGPOBJR.ObjectCallables["circle"] = function(obj)
 	love.graphics.polygon("fill", points)
 end
 
+local fontText = love.graphics.newFont(12)
 
+EGPOBJR.ObjectCallables["text"] = function(obj)
+	love.graphics.setColor(obj.r / 255, obj.g / 255, obj.b / 255, obj.a / 255)
+
+	love.graphics.print(obj.message, obj.x, obj.y, 0, obj.fontsize / 12, obj.fontsize / 12, (fontText:getWidth(obj.message) / 2) * obj.alignx, (fontText:getHeight() / 2) * obj.aligny)
+end
 
 function EGPD2.RenderObjects()
 	for k, v in pairs(EGPD2.Objects) do
-		pcall(EGPOBJR.ObjectCallables[v.type], v)
+		local fine, err = pcall(EGPOBJR.ObjectCallables[v.type], v)
+		if not fine then
+			print("ERROR RENDERING ELEMENT TYPE " .. v.type .. "; " ..  err)
+		end
 	end
 end

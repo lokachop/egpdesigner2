@@ -40,6 +40,16 @@ EGPD2.PresetTableCopiesForTypes["circle"] = {
 	fidelity = 32
 }
 
+EGPD2.PresetTableCopiesForTypes["text"] = {
+	type = "text",
+	drawtype = "nopoly",
+	message = "#BASE_EGPD2",
+	alignx = 0,
+	aligny = 0,
+	fontsize = 12
+}
+
+
 for k, v in pairs(EGPD2.PresetTableCopiesForTypes) do
 	for k2, v2 in pairs(EGPD2.BaseObjectProperties) do
 		if EGPD2.PresetTableCopiesForTypes[k][k2] == nil then
@@ -70,6 +80,10 @@ EGPD2.ObjectCreators["nopoly"] = function(x, y, id)
 	EGPD2.Objects[id] = tblcopy
 end
 
+function EGPD2.DeleteObject(id)
+	EGPD2.Objects[id] = nil
+	EGPD2.DynamicUI.WipeToDeleteUI()
+end
 
 function EGPD2.CreateObjectCurrSelected(x, y, id)
 	pcall(EGPD2.ObjectCreators[EGPD2.PresetTableCopiesForTypes[EGPD2.CurrObjectType].drawtype], x, y, id)

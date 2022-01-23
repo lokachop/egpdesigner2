@@ -187,13 +187,14 @@ end)
 
 -- LABEL
 lsglil2.RegisterElement("label", {
-	["text"] = "Label"
+	["text"] = "Label",
+	["alignmode"] = "center"
 },
 function() end,
 
 function(time, edata, touching)
 	love.graphics.setColor(edata["col"][1], edata["col"][2], edata["col"][3], edata["col"][4])
-	love.graphics.printf(edata["text"], edata["x"], edata["y"], edata["w"], "center")
+	love.graphics.printf(edata["text"], edata["x"], edata["y"], edata["w"], edata["alignmode"])
 end
 )
 

@@ -67,6 +67,15 @@ function EGPD2.Initlsgil2Buttons()
 		EGPD2.CurrObjectType = "point"
 	end)
 
+	lsglil2.NewObject("ButtonTypeText", "button")
+	lsglil2.SetObjectPosition("ButtonTypeText", 4, 256 + 56)
+	lsglil2.SetObjectScale("ButtonTypeText", 118, 32)
+	lsglil2.SetObjectData("ButtonTypeText", "text", "Text")
+	lsglil2.SetObjectData("ButtonTypeText", "col", {0.4, 0.4, 0.2})
+	lsglil2.SetObjectData("ButtonTypeText", "onPress", function(GUITime)
+		EGPD2.CurrObjectType = "text"
+	end)
+
 	lsglil2.NewObject("ButtonSaveAsEGD", "button")
 	lsglil2.SetObjectPosition("ButtonSaveAsEGD", 4, 516)
 	lsglil2.SetObjectScale("ButtonSaveAsEGD", 118, 56)
