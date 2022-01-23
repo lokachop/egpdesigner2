@@ -6,6 +6,7 @@ EGPD2.CurrPosOffset = {0, 0}
 EGPD2.CenterPos = {384, 256}
 EGPD2.ExportName = "exported"
 EGPD2.ImageBase = love.graphics.newImage("res/image.png")
+EGPD2.ImageBase:setFilter("nearest", "nearest")
 EGPD2.AddModeActive = false
 EGPD2.SelectedObject = 0
 
@@ -42,7 +43,15 @@ EGPD2.PresetTableCopiesForTypes["circle"] = {
 for k, v in pairs(EGPD2.PresetTableCopiesForTypes) do
 	for k2, v2 in pairs(EGPD2.BaseObjectProperties) do
 		if EGPD2.PresetTableCopiesForTypes[k][k2] == nil then
-			EGPD2.PresetTableCopiesForTypes[k][k2] = v2
+			if type(v2) == "table" then
+				EGPD2.PresetTableCopiesForTypes[k][k2] = {}
+				for k3, v3 in pairs(v2) do
+					EGPD2.PresetTableCopiesForTypes[k][k2][k3] = v3
+				end
+				print(tostring(v2) .. " is table")
+			else
+				EGPD2.PresetTableCopiesForTypes[k][k2] = v2
+			end
 		end
 	end
 end
@@ -76,7 +85,7 @@ function EGPD2.MouseToScreen(x, y)
 end
 
 function EGPD2.FormatStringToNum(str)
-	local strf = string.gsub(str, "%D", "")
+	local strf = string.gsub(str, "[%a%c%s%z]", "")
 	return tonumber(strf) or 0
 end
 

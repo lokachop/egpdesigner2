@@ -39,6 +39,7 @@ function EGPD2.HandleSelecting(x, y, button)
 		if obj == nil then
 			return
 		end
+		EGPD2.SelectedObject = obj
 		EGPD2.MakeUIForObjectProperties()
 	end
 end

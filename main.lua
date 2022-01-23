@@ -43,7 +43,7 @@ function love.draw() -- draw
 end
 
 function love.mousepressed(x, y, button, istouch, presses)
-	if not lsglil2.HasPressedButton(x, y) then
+	if not lsglil2.HasPressedButton(x, y) and not lsglil2.TextEntryActive() then
 		EGPD2.HandleMouse(x, y, button)
 	end
 end

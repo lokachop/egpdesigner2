@@ -339,6 +339,10 @@ function lsglil2.DeleteObject(id)
 	lsglil2.DrawableElements[id] = nil
 end
 
+function lsglil2.TextEntryActive()
+	return lsglil2.Flags.TextEntry.Active
+end
+
 local function inrange(num, min, max)
 	return (num > min) and (num < max)
 end
