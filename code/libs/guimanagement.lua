@@ -43,7 +43,33 @@ local function MakeEntryNum(id, str, bgstring, grab, releasecall, col)
 	lsglil2.SetObjectData(ide, "text", grab)
 	lsglil2.SetObjectData(ide, "col", tcol)
 	lsglil2.SetObjectData(ide, "releasecall", releasecall)
+
+	EGPD2.DynamicUI.LastHeight = EGPD2.DynamicUI.LastHeight + EGPD2.DynamicUI.AdderStep
 end
+
+
+local function MakeEntryLong(id, str, bgstring, grab, releasecall, col)
+	local idl = id .. "label"
+	local ide = id .. "entry"
+
+	local tcol = col or {0.4, 0.4, 0.4}
+	MakeObjectAndAddToTable(idl, "label")
+	lsglil2.SetObjectPosition(idl, 644, EGPD2.DynamicUI.LastHeight)
+	lsglil2.SetObjectData(idl, "text", str)
+	lsglil2.SetObjectData(idl, "alignmode", "center")
+	lsglil2.SetObjectScale(idl, 120, 32)
+
+	MakeObjectAndAddToTable(ide, "textentry")
+	lsglil2.SetObjectPosition(ide, 644, EGPD2.DynamicUI.LastHeight + EGPD2.DynamicUI.AdderStep)
+	lsglil2.SetObjectScale(ide, 120, 48)
+	lsglil2.SetObjectData(ide, "backgroundtext", bgstring)
+	lsglil2.SetObjectData(ide, "text", grab)
+	lsglil2.SetObjectData(ide, "col", tcol)
+	lsglil2.SetObjectData(ide, "releasecall", releasecall)
+
+	EGPD2.DynamicUI.LastHeight = EGPD2.DynamicUI.LastHeight + EGPD2.DynamicUI.AdderStep * 4
+end
+
 
 EGPD2.DynamicUI.ConfMakers["w"] = function(obj)
 	MakeEntryNum("confw", "Width", "Width", obj.w, function(edata)
@@ -51,7 +77,6 @@ EGPD2.DynamicUI.ConfMakers["w"] = function(obj)
 		edata.text = num
 		obj.w = num
 	end)
-	EGPD2.DynamicUI.LastHeight = EGPD2.DynamicUI.LastHeight + EGPD2.DynamicUI.AdderStep
 end
 
 EGPD2.DynamicUI.ConfMakers["h"] = function(obj)
@@ -60,7 +85,6 @@ EGPD2.DynamicUI.ConfMakers["h"] = function(obj)
 		edata.text = num
 		obj.h = num
 	end)
-	EGPD2.DynamicUI.LastHeight = EGPD2.DynamicUI.LastHeight + EGPD2.DynamicUI.AdderStep
 end
 
 EGPD2.DynamicUI.ConfMakers["x"] = function(obj)
@@ -69,7 +93,6 @@ EGPD2.DynamicUI.ConfMakers["x"] = function(obj)
 		edata.text = num
 		obj.x = num
 	end)
-	EGPD2.DynamicUI.LastHeight = EGPD2.DynamicUI.LastHeight + EGPD2.DynamicUI.AdderStep
 end
 
 EGPD2.DynamicUI.ConfMakers["y"] = function(obj)
@@ -78,25 +101,28 @@ EGPD2.DynamicUI.ConfMakers["y"] = function(obj)
 		edata.text = num
 		obj.y = num
 	end)
-	EGPD2.DynamicUI.LastHeight = EGPD2.DynamicUI.LastHeight + EGPD2.DynamicUI.AdderStep
+end
+
+local function clampalgn(num)
+	if num > 2 then num = 2 end
+	if num < 0 then num = 0 end
+	return num
 end
 
 EGPD2.DynamicUI.ConfMakers["alignx"] = function(obj)
 	MakeEntryNum("confalgnx", "Align X", "AlgnX", obj.alignx, function(edata)
-		local num = EGPD2.FormatStringToNum(edata.text)
+		local num = clampalgn(EGPD2.FormatStringToNum(edata.text))
 		edata.text = num
 		obj.alignx = num
 	end, {0.4, 0.6, 0.6})
-	EGPD2.DynamicUI.LastHeight = EGPD2.DynamicUI.LastHeight + EGPD2.DynamicUI.AdderStep
 end
 
 EGPD2.DynamicUI.ConfMakers["aligny"] = function(obj)
 	MakeEntryNum("confalgny", "Align Y", "AlgnY", obj.aligny, function(edata)
-		local num = EGPD2.FormatStringToNum(edata.text)
+		local num = clampalgn(EGPD2.FormatStringToNum(edata.text))
 		edata.text = num
 		obj.aligny = num
 	end, {0.4, 0.6, 0.6})
-	EGPD2.DynamicUI.LastHeight = EGPD2.DynamicUI.LastHeight + EGPD2.DynamicUI.AdderStep
 end
 
 EGPD2.DynamicUI.ConfMakers["fontsize"] = function(obj)
@@ -105,16 +131,19 @@ EGPD2.DynamicUI.ConfMakers["fontsize"] = function(obj)
 		edata.text = num
 		obj.fontsize = num
 	end, {0.4, 0.6, 0.6})
-	EGPD2.DynamicUI.LastHeight = EGPD2.DynamicUI.LastHeight + EGPD2.DynamicUI.AdderStep
 end
+
+
 
 
 EGPD2.DynamicUI.ConfMakers["message"] = function(obj)
-	MakeEntryNum("confmessage", "Text", "text", obj.message, function(edata)
+	MakeEntryLong("confmessage", "Text", "text", obj.message, function(edata)
 		obj.message = edata.text
 	end, {0.4, 0.6, 0.6})
-	EGPD2.DynamicUI.LastHeight = EGPD2.DynamicUI.LastHeight + EGPD2.DynamicUI.AdderStep
 end
+
+
+
 
 EGPD2.DynamicUI.ConfMakers["fidelity"] = function(obj)
 	MakeEntryNum("conf_fidelity", "Fidelity", "Fidelity", obj.fidelity, function(edata)
@@ -214,9 +243,9 @@ function EGPD2.MakeUIForObjectProperties()
 	end
 
 	MakeObjectAndAddToTable("confDeleteButton", "button")
-	lsglil2.SetObjectPosition("confDeleteButton", 642, EGPD2.DynamicUI.LastHeight)
+	lsglil2.SetObjectPosition("confDeleteButton", 644, EGPD2.DynamicUI.LastHeight)
 	lsglil2.SetObjectData("confDeleteButton", "col", {0.4, 0.1, 0.1})
-	lsglil2.SetObjectScale("confDeleteButton", 123, 32)
+	lsglil2.SetObjectScale("confDeleteButton", 120, 32)
 	lsglil2.SetObjectData("confDeleteButton", "text", "Delete")
 	lsglil2.SetObjectData("confDeleteButton", "onPress", function(edata)
 		EGPD2.DeleteObject(EGPD2.SelectedObject)
