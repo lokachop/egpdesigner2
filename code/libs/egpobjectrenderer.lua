@@ -38,11 +38,28 @@ EGPOBJR.ObjectCallables["text"] = function(obj)
 	love.graphics.print(obj.message, obj.x, obj.y, 0, obj.fontsize / 12, obj.fontsize / 12, (fontText:getWidth(obj.message) / 2) * obj.alignx, (fontText:getHeight() / 2) * obj.aligny)
 end
 
+
+local selectedShader = love.graphics.newShader([[
+	vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords)
+	{
+		vec4 texturecolor = Texel(tex, texture_coords);
+
+		float modxy = mod(screen_coords.x / 2 + screen_coords.y / 2, 2);
+		vec3 fcol = color.xyz / (clamp(modxy, 0, 1) * 4);
+		return texturecolor * vec4(fcol, color.w);
+	}
+]])
+
 function EGPD2.RenderObjects()
 	for k, v in pairs(EGPD2.Objects) do
+		if k == EGPD2.SelectedObject then
+			love.graphics.setShader(selectedShader)
+		end
 		local fine, err = pcall(EGPOBJR.ObjectCallables[v.type], v)
 		if not fine then
 			print("ERROR RENDERING ELEMENT TYPE " .. v.type .. "; " ..  err)
 		end
+
+		love.graphics.setShader()
 	end
 end
