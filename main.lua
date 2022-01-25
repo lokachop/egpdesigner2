@@ -43,7 +43,7 @@ function love.draw() -- draw
 end
 
 function love.mousepressed(x, y, button, istouch, presses)
-	if not lsglil2.HasPressedButton(x, y) and not lsglil2.TextEntryActive() then
+	if EGPD2.CanInteract() then
 		EGPD2.HandleMouse(x, y, button)
 	end
 end
@@ -53,5 +53,5 @@ function love.mousemoved(x, y, dx, dy)
 end
 
 function love.wheelmoved(x, y)
-	EGPD2.HandleZooming(x, y)
+	EGPD2.HandleScrolling(x, y)
 end

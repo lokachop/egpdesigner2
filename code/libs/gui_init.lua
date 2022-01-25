@@ -75,7 +75,7 @@ function EGPD2.Initlsgil2Buttons()
 	lsglil2.SetObjectData("ButtonSaveAsEGD", "onPress", function(GUITime)
 		EGPD2.Exporters.Text.Export(lsglil2.GetObjectData("TextEntryName")["text"])
 	end)
-	
+
 
 	lsglil2.NewObject("ButtonLoadEGD", "button")
 	lsglil2.SetObjectPosition("ButtonLoadEGD", 4, 576 + 4)

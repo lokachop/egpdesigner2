@@ -6,6 +6,53 @@ EGPD2.DynamicUI.ConfMakers = {}
 EGPD2.DynamicUI.AdderStep = 18
 
 EGPD2.ObjectList = {}
+EGPD2.ObjectList.Objects = {}
+EGPD2.ObjectList.ScrollModifier = 0
+
+
+function EGPD2.ObjectList.ScrollObjectList(x, y)
+	local addmult = x * 32
+	if EGPD2.ObjectList.ScrollModifier + addmult > #EGPD2.ObjectList.Objects * 16 then
+		return
+	end
+
+	if EGPD2.ObjectList.ScrollModifier + addmult < 0 then
+		return
+	end
+
+	EGPD2.ObjectList.ScrollModifier = EGPD2.ObjectList.ScrollModifier + addmult
+	EGPD2.ObjectList.UpdateScrollers()
+end
+
+function EGPD2.ObjectList.UpdateScrollers()
+	for k, v in pairs(EGPD2.ObjectList.Objects) do
+		lsglil2.SetObjectPosition(v.id, 770, 18 + (k * 16) + EGPD2.ObjectList.ScrollModifier)
+	end
+end
+
+function EGPD2.ObjectList.DeleteObject(id)
+	lsglil2.DeleteObject(EGPD2.ObjectList.Objects[id].id)
+	EGPD2.ObjectList.Objects[id] = nil
+end
+
+function EGPD2.ObjectList.MakeObject(obj, id)
+	local mkid = "ObjListButton" .. id
+	lsglil2.NewObject(mkid, "button")
+	lsglil2.SetObjectData(mkid, "text", "[#" .. id .. "] " .. obj.type)
+	lsglil2.SetObjectScale(mkid, 124, 16)
+	lsglil2.SetObjectData(mkid, "onPress", function(edata)
+		if not lsglil2.TextEntryActive() then
+			EGPD2.SelectObject(id)
+		end
+	end)
+
+	EGPD2.ObjectList.Objects[id] = {
+		id = mkid
+	}
+
+	EGPD2.ObjectList.UpdateScrollers()
+end
+
 
 
 function EGPD2.DynamicUI.UpdateColours()

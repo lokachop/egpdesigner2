@@ -6,6 +6,8 @@ EGPD2.CenterPos = {384, 256}
 EGPD2.ExportName = "exported"
 EGPD2.HighestID = 0
 
+EGPD2.ObjectList = EGPD2.ObjectList or {}
+
 
 EGPD2.BaseObjectProperties = {
 	id = 0,
@@ -63,6 +65,12 @@ for k, v in pairs(EGPD2.PresetTableCopiesForTypes) do
 	end
 end
 
+function EGPD2.PushObject(tbl, id)
+	print("pushing object id " .. id .. "...")
+	EGPD2.Objects[id] = tbl
+	EGPD2.ObjectList.MakeObject(tbl, id)
+end
+
 EGPD2.ObjectCreators = {}
 EGPD2.ObjectCreators["nopoly"] = function(x, y, id)
 	local tblcopy = {}
@@ -74,11 +82,12 @@ EGPD2.ObjectCreators["nopoly"] = function(x, y, id)
 	tblcopy.y = math.floor(y)
 	tblcopy.id = id
 
-	EGPD2.Objects[id] = tblcopy
+	EGPD2.PushObject(tblcopy, id)
 end
 
 function EGPD2.DeleteObject(id)
 	EGPD2.Objects[id] = nil
+	EGPD2.ObjectList.DeleteObject(id)
 	EGPD2.DynamicUI.WipeToDeleteUI()
 end
 
@@ -124,6 +133,8 @@ local BlacklistedModes = {
 function EGPD2.SafeDelete(id)
 	if not lsglil2.TextEntryActive() and not (BlacklistedModes[EGPD2.CurrentMode] or false) then
 		EGPD2.DeleteObject(id)
+		EGPD2.ObjectList.Objects[id] = nil
+		EGPD2.ObjectList.DeleteObject(id)
 	end
 end
 

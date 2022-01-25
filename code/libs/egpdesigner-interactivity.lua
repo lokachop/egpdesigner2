@@ -12,6 +12,15 @@ function EGPD2.CanInteractDrawing()
 	return inrange(mx, EGPD2.CenterPos[1] - 256, EGPD2.CenterPos[1] + 256) and inrange(my, EGPD2.CenterPos[2] - 256, EGPD2.CenterPos[2] + 256)
 end
 
+function EGPD2.CanInteract()
+	local mx, my = love.mouse.getPosition()
+	return not lsglil2.HasPressedButton(mx, my) and not lsglil2.TextEntryActive()
+end
+
+function EGPD2.SelectObject(id)
+	EGPD2.SelectedObject = id
+	EGPD2.MakeUIForObjectProperties()
+end
 
 function EGPD2.HandleMoving(x, y, dx, dy)
 	if love.mouse.isDown(3) then
@@ -26,6 +35,10 @@ function EGPD2.HandleZooming(x, y)
 	else
 		EGPD2.CurrZoom = EGPD2.CurrZoom / 1.1
 	end
+end
+
+function EGPD2.HandleScrolling(x, y)
+	EGPD2.HandleZooming(x, y)
 end
 
 function EGPD2.HandleDrawing(x, y, button)
@@ -69,8 +82,7 @@ function EGPD2.HandleSelecting(x, y, button)
 		if obj == nil then
 			return
 		end
-		EGPD2.SelectedObject = obj
-		EGPD2.MakeUIForObjectProperties()
+		EGPD2.SelectObject(obj)
 	end
 end
 
