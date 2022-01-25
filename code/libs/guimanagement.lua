@@ -212,12 +212,24 @@ EGPD2.DynamicUI.ConfMakers["r"] = function(obj)
 		lsglil2.SetObjectData("PanelColours", "col", {obj.r / 255, obj.g / 255, obj.b / 255})
 	end)
 
+	MakeObjectAndAddToTable("confColourPickRGB", "button")
+	lsglil2.SetObjectPosition("confColourPickRGB", 644, EGPD2.DynamicUI.LastHeight + EGPD2.DynamicUI.AdderStep * 2)
+	lsglil2.SetObjectScale("confColourPickRGB", 38, 16)
+	lsglil2.SetObjectData("confColourPickRGB", "text", "Pick")
+	lsglil2.SetObjectData("confColourPickRGB", "col", {0.3, 0.3, 0.3})
+	lsglil2.SetObjectData("confColourPickRGB", "onPress", function()
+		if EGPD2.CurrentMode ~= "colpick" then
+			EGPD2.CurrentMode = "colpick"
+		end
+	end)
+
 	EGPD2.DynamicUI.LastHeight = EGPD2.DynamicUI.LastHeight + (EGPD2.DynamicUI.AdderStep * 3)
 end
 
 EGPD2.DynamicUI.MakeOrder = {
 	"w", "h", "r", "x", "y", "fidelity", "fontsize", "alignx", "aligny", "message"
 }
+
 
 
 function EGPD2.MakeUIForObjectProperties()
@@ -248,7 +260,9 @@ function EGPD2.MakeUIForObjectProperties()
 	lsglil2.SetObjectScale("confDeleteButton", 120, 32)
 	lsglil2.SetObjectData("confDeleteButton", "text", "Delete")
 	lsglil2.SetObjectData("confDeleteButton", "onPress", function(edata)
-		EGPD2.DeleteObject(EGPD2.SelectedObject)
+		if not lsglil2.TextEntryActive() then
+			EGPD2.SafeDelete(EGPD2.SelectedObject)
+		end
 	end)
 
 end

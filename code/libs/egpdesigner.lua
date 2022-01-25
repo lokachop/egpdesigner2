@@ -1,14 +1,11 @@
 EGPD2 = EGPD2 or {}
 EGPD2.Objects = {}
-EGPD2.CurrObjectType = "box"
 EGPD2.CurrZoom = 1
 EGPD2.CurrPosOffset = {0, 0}
 EGPD2.CenterPos = {384, 256}
 EGPD2.ExportName = "exported"
-EGPD2.ImageBase = love.graphics.newImage("res/image.png")
-EGPD2.ImageBase:setFilter("nearest", "nearest")
-EGPD2.AddModeActive = false
-EGPD2.SelectedObject = 0
+EGPD2.HighestID = 0
+
 
 EGPD2.BaseObjectProperties = {
 	id = 0,
@@ -104,6 +101,10 @@ function EGPD2.FormatStringToNum(str)
 end
 
 local function checkValid(obj)
+	if obj == nil then
+		return false
+	end
+
 	if obj.w == nil then
 		print("invalid touchable")
 		return false
@@ -116,11 +117,23 @@ local function inrange(num, min, max)
 	return num >= min and num <= max
 end
 
+local BlacklistedModes = {
+	["colpick"] = true
+}
+
+function EGPD2.SafeDelete(id)
+	if not lsglil2.TextEntryActive() and not (BlacklistedModes[EGPD2.CurrentMode] or false) then
+		EGPD2.DeleteObject(id)
+	end
+end
+
+
 function EGPD2.CheckTouchingObject(x, y)
 	local mx, my = EGPD2.MouseToScreen(x, y)
-	for k, v in pairs(EGPD2.Objects) do
+	for i = EGPD2.HighestID, 0, -1 do
+		local v = EGPD2.Objects[i]
 		if checkValid(v) and inrange(mx, v.x - v.w / 2, v.x + v.w / 2) and inrange(my, v.y - v.h / 2, v.y + v.h / 2) then
-			return k
+			return i
 		end
 	end
 end

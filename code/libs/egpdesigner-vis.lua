@@ -1,4 +1,14 @@
 EGPD2 = EGPD2 or {}
+EGPD2.ImageBase = love.graphics.newImage("res/image.png")
+EGPD2.ImageBase:setFilter("nearest", "nearest")
+
+
+local tempCanvas = love.graphics.newCanvas(EGPD2.ImageBase:getWidth(), EGPD2.ImageBase:getHeight())
+love.graphics.setCanvas(tempCanvas)
+	love.graphics.draw(EGPD2.ImageBase)
+love.graphics.setCanvas()
+
+EGPD2.ImgData = tempCanvas:newImageData()
 
 function EGPD2.StartTranslatedStuff()
 	love.graphics.push()
@@ -85,7 +95,7 @@ function EGPD2.RenderInformation()
 	love.graphics.printf(typestring .. posstring .. zoomstring, 128, 0, 511, "right")
 
 
-	love.graphics.printf("addmode: " .. tostring(EGPD2.AddModeActive), 128, 496, 511, "center")
+	love.graphics.printf("current mode: " .. tostring(EGPD2.CurrentMode), 128, 496, 511, "center")
 	local typeobject = "nil"
 	if EGPD2.Objects[EGPD2.SelectedObject] then
 		typeobject = EGPD2.Objects[EGPD2.SelectedObject].type
