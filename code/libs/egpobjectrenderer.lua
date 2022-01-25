@@ -45,7 +45,7 @@ local selectedShader = love.graphics.newShader([[
 		vec4 texturecolor = Texel(tex, texture_coords);
 
 		float modxy = mod(screen_coords.x / 2 + screen_coords.y / 2, 2);
-		vec3 fcol = color.xyz / (clamp(modxy, 0, 1) * 4);
+		vec3 fcol = color.xyz * modxy;
 		return texturecolor * vec4(fcol, color.w);
 	}
 ]])
