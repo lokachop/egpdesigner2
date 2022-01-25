@@ -94,6 +94,7 @@ function EGPD2.HandleColPick(x, y, button)
 	EGPD2.Objects[EGPD2.SelectedObject].g = math.floor(g * 255)
 	EGPD2.Objects[EGPD2.SelectedObject].b = math.floor(b * 255)
 
+	EGPD2.DynamicUI.UpdateColours()
 	EGPD2.CurrentMode = "select"
 end
 

@@ -7,6 +7,19 @@ EGPD2.DynamicUI.AdderStep = 18
 
 EGPD2.ObjectList = {}
 
+
+function EGPD2.DynamicUI.UpdateColours()
+	if EGPD2.Objects[EGPD2.SelectedObject] == nil then
+		return
+	end
+	local obj = EGPD2.Objects[EGPD2.SelectedObject]
+	lsglil2.SetObjectData("PanelColours", "col", {obj.r / 255, obj.g / 255, obj.b / 255})
+	lsglil2.SetObjectData("confLabelEntryR", "text", obj.r)
+	lsglil2.SetObjectData("confLabelEntryG", "text", obj.g)
+	lsglil2.SetObjectData("confLabelEntryB", "text", obj.b)
+end
+
+
 function EGPD2.ObjectList.AddObject(id)
 
 end
@@ -141,8 +154,6 @@ EGPD2.DynamicUI.ConfMakers["message"] = function(obj)
 		obj.message = edata.text
 	end, {0.4, 0.6, 0.6})
 end
-
-
 
 
 EGPD2.DynamicUI.ConfMakers["fidelity"] = function(obj)
