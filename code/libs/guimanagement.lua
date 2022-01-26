@@ -233,7 +233,7 @@ EGPD2.DynamicUI.ConfMakers["rot"] = function(obj)
 		local num = EGPD2.FormatStringToNum(edata.text)
 		edata.text = num
 		obj.rot = num
-	end)
+	end, {0.4, 0.6, 0.6})
 end
 
 

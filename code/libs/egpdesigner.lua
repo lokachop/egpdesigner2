@@ -46,7 +46,8 @@ EGPD2.PresetTableCopiesForTypes["text"] = {
 	message = "#BASE_EGPD2",
 	alignx = 0,
 	aligny = 0,
-	fontsize = 12
+	fontsize = 12,
+	rot = 0
 }
 
 

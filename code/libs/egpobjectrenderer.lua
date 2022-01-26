@@ -41,7 +41,7 @@ local fontText = love.graphics.newFont(12)
 EGPOBJR.ObjectCallables["text"] = function(obj)
 	love.graphics.setColor(obj.r / 255, obj.g / 255, obj.b / 255, obj.a / 255)
 
-	love.graphics.print(obj.message, obj.x, obj.y, 0, obj.fontsize / 12, obj.fontsize / 12, (fontText:getWidth(obj.message) / 2) * obj.alignx, (fontText:getHeight() / 2) * obj.aligny)
+	love.graphics.print(obj.message, obj.x, obj.y, math.rad(obj.rot), obj.fontsize / 12, obj.fontsize / 12, (fontText:getWidth(obj.message) / 2) * obj.alignx, (fontText:getHeight() / 2) * obj.aligny)
 end
 
 
@@ -51,8 +51,7 @@ local selectedShader = love.graphics.newShader([[
 		vec4 texturecolor = Texel(tex, texture_coords);
 
 		float modxy = mod(screen_coords.x / 2 + screen_coords.y / 2, 2);
-		vec3 fcol = color.xyz * modxy;
-		return texturecolor * vec4(fcol, color.w);
+		return texturecolor * vec4(color.xyz * modxy, color.w);
 	}
 ]])
 
