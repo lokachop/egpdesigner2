@@ -30,14 +30,14 @@ end
 
 
 function EGPD2.Math.inPoly(x, y, polydata)
-	local fine, ret = pcall(love.math.triangulate(), polydata)
+	local fine, ret = pcall(love.math.triangulate, polydata)
 	if not fine then
 		print("[ERROR] [InPoly]: " .. ret)
 		return false
 	end
 
 	for k, v in pairs(ret) do
-		if EGPD2.Math.inTriangle(x, y, ret[1], ret[2], ret[3], ret[4], ret[5], ret[6]) then
+		if EGPD2.Math.inTriangle(x, y, v[1], v[2], v[3], v[4], v[5], v[6]) then
 			return true
 		end
 	end

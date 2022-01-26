@@ -161,12 +161,32 @@ function EGPD2.SafeDelete(id)
 end
 
 
+EGPD2.TouchCheckers = {
+	["nopoly"] = function(obj, x, y)
+		if checkValid(obj) and EGPD2.Math.inBox(x, y, obj.x - obj.w / 2, obj.y - obj.h / 2, obj.w, obj.h) then
+			return true
+		end
+	end,
+	["poly"] = function(obj, x, y)
+		return EGPD2.Math.inPoly(x, y, EGPD2.PolyData[obj.id])
+	end
+}
+
 function EGPD2.CheckTouchingObject(x, y)
 	local mx, my = EGPD2.MouseToScreen(x, y)
 	for i = EGPD2.HighestID, 0, -1 do
-		local v = EGPD2.Objects[i]
-		if checkValid(v) and EGPD2.Math.inBox(mx, my, v.x - v.w / 2, v.y - v.h / 2, v.w, v.h) then
-			return i
+		local obj = EGPD2.Objects[i]
+		if obj ~= nil then
+			local fine, ret = pcall(EGPD2.TouchCheckers[obj.drawtype], obj, mx, my)
+
+			if not fine then
+				print("touch error!; " .. ret)
+				return
+			end
+
+			if ret == true then
+				return i
+			end
 		end
 	end
 end

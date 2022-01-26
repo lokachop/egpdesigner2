@@ -123,11 +123,11 @@ function EGPD2.HandleDrawPoly(x, y, button)
 
 		local tbl = EGPD2.PolyData[EGPD2.SelectedObject]
 		tbl[#tbl + 1] = tx
-		print("x;", tbl[#tbl])
 		tbl[#tbl + 1] = ty
-		print("y;", tbl[#tbl])
-
-		print("draw!")
+	elseif button == 2 then
+		local tbl = EGPD2.PolyData[EGPD2.SelectedObject]
+		tbl[#tbl] = nil
+		tbl[#tbl] = nil
 	end
 end
 
