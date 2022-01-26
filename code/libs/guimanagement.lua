@@ -11,12 +11,12 @@ EGPD2.ObjectList.ScrollModifier = 0
 
 
 function EGPD2.ObjectList.ScrollObjectList(x, y)
-	local addmult = x * 32
-	if EGPD2.ObjectList.ScrollModifier + addmult > #EGPD2.ObjectList.Objects * 16 then
+	local addmult = y * 32
+	if EGPD2.ObjectList.ScrollModifier + addmult - 512 < -#EGPD2.ObjectList.Objects * 16 then
 		return
 	end
 
-	if EGPD2.ObjectList.ScrollModifier + addmult < 0 then
+	if EGPD2.ObjectList.ScrollModifier + addmult > 0 then
 		return
 	end
 

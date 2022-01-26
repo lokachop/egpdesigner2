@@ -2,6 +2,7 @@ EGPD2 = EGPD2 or {}
 EGPD2.CurrObjectType = "box"
 EGPD2.CurrentMode = "select"
 EGPD2.SelectedObject = 0
+local ScrollPosObjList = {768, 0}
 
 local function inrange(num, min, max)
 	return num >= min and num <= max
@@ -38,7 +39,13 @@ function EGPD2.HandleZooming(x, y)
 end
 
 function EGPD2.HandleScrolling(x, y)
-	EGPD2.HandleZooming(x, y)
+	local mx, my = love.mouse.getPosition()
+
+	if inrange(mx, ScrollPosObjList[1], ScrollPosObjList[1] + 128) and inrange(my, ScrollPosObjList[2], ScrollPosObjList[2] + 640) then
+		EGPD2.ObjectList.ScrollObjectList(x, y)
+	else
+		EGPD2.HandleZooming(x, y)
+	end
 end
 
 function EGPD2.HandleDrawing(x, y, button)
