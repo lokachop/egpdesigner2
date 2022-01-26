@@ -4,13 +4,10 @@ EGPD2.CurrentMode = "select"
 EGPD2.SelectedObject = 0
 local ScrollPosObjList = {768, 0}
 
-local function inrange(num, min, max)
-	return num >= min and num <= max
-end
 
 function EGPD2.CanInteractDrawing()
 	local mx, my = love.mouse.getPosition()
-	return inrange(mx, EGPD2.CenterPos[1] - 256, EGPD2.CenterPos[1] + 256) and inrange(my, EGPD2.CenterPos[2] - 256, EGPD2.CenterPos[2] + 256)
+	return EGPD2.Math.inBox(mx, my, EGPD2.CenterPos[1] - 256, EGPD2.CenterPos[2] - 256, 512, 512)
 end
 
 function EGPD2.CanInteract()
@@ -41,7 +38,7 @@ end
 function EGPD2.HandleScrolling(x, y)
 	local mx, my = love.mouse.getPosition()
 
-	if inrange(mx, ScrollPosObjList[1], ScrollPosObjList[1] + 128) and inrange(my, ScrollPosObjList[2], ScrollPosObjList[2] + 640) then
+	if EGPD2.Math.inBox(mx, my, ScrollPosObjList[1], ScrollPosObjList[2], 128, 640) then
 		EGPD2.ObjectList.ScrollObjectList(x, y)
 	else
 		EGPD2.HandleZooming(x, y)

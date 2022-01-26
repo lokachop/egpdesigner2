@@ -124,10 +124,6 @@ local function checkValid(obj)
 	return true
 end
 
-local function inrange(num, min, max)
-	return num >= min and num <= max
-end
-
 local BlacklistedModes = {
 	["colpick"] = true
 }
@@ -145,7 +141,7 @@ function EGPD2.CheckTouchingObject(x, y)
 	local mx, my = EGPD2.MouseToScreen(x, y)
 	for i = EGPD2.HighestID, 0, -1 do
 		local v = EGPD2.Objects[i]
-		if checkValid(v) and inrange(mx, v.x - v.w / 2, v.x + v.w / 2) and inrange(my, v.y - v.h / 2, v.y + v.h / 2) then
+		if checkValid(v) and EGPD2.Math.inBox(mx, my, v.x - v.w / 2, v.y - v.h / 2, v.w, v.h) then
 			return i
 		end
 	end
