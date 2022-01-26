@@ -1,5 +1,6 @@
 EGPD2 = EGPD2 or {}
 EGPD2.Objects = {}
+EGPD2.PolyData = {}
 EGPD2.CurrZoom = 1
 EGPD2.CurrPosOffset = {0, 0}
 EGPD2.CenterPos = {384, 256}
@@ -39,6 +40,12 @@ EGPD2.PresetTableCopiesForTypes["circle"] = {
 	drawtype = "nopoly",
 	fidelity = 32
 }
+
+EGPD2.PresetTableCopiesForTypes["poly"] = {
+	type = "poly",
+	drawtype = "poly",
+}
+
 
 EGPD2.PresetTableCopiesForTypes["text"] = {
 	type = "text",
@@ -86,6 +93,23 @@ EGPD2.ObjectCreators["nopoly"] = function(x, y, id)
 
 	EGPD2.PushObject(tblcopy, id)
 end
+
+
+EGPD2.ObjectCreators["poly"] = function(x, y, id)
+	local tblcopy = {}
+	for k, v in pairs(EGPD2.PresetTableCopiesForTypes[EGPD2.CurrObjectType]) do
+		tblcopy[k] = v
+	end
+
+	tblcopy.x = math.floor(x)
+	tblcopy.y = math.floor(y)
+	tblcopy.id = id
+
+	EGPD2.PushObject(tblcopy, id)
+	EGPD2.CurrentMode = "drawpoly"
+	EGPD2.PolyData[id] = {}
+end
+
 
 function EGPD2.DeleteObject(id)
 	EGPD2.Objects[id] = nil

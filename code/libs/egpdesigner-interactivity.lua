@@ -69,6 +69,9 @@ EGPD2.InputCallablesSpace = {
 	end,
 	["colpick"] = function()
 		EGPD2.CurrentMode = "select"
+	end,
+	["drawpoly"] = function()
+		EGPD2.CurrentMode = "select"
 	end
 }
 
@@ -114,6 +117,20 @@ function EGPD2.HandleColPick(x, y, button)
 	EGPD2.CurrentMode = "select"
 end
 
+function EGPD2.HandleDrawPoly(x, y, button)
+	if button == 1 then
+		local tx, ty = EGPD2.MouseToScreen(x, y)
+
+		local tbl = EGPD2.PolyData[EGPD2.SelectedObject]
+		tbl[#tbl + 1] = tx
+		print("x;", tbl[#tbl])
+		tbl[#tbl + 1] = ty
+		print("y;", tbl[#tbl])
+
+		print("draw!")
+	end
+end
+
 EGPD2.ModeCallables = {
 	["select"] = function(x, y, button)
 		EGPD2.HandleSelecting(x, y, button)
@@ -123,6 +140,9 @@ EGPD2.ModeCallables = {
 	end,
 	["colpick"] = function(x, y, button)
 		EGPD2.HandleColPick(x, y, button)
+	end,
+	["drawpoly"] = function(x, y, button)
+		EGPD2.HandleDrawPoly(x, y, button)
 	end
 }
 

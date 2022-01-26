@@ -30,9 +30,10 @@ end
 
 
 function EGPD2.Math.inPoly(x, y, polydata)
-	local fine, ret = pcall(love.math.triangulate(polydata))
+	local fine, ret = pcall(love.math.triangulate(), polydata)
 	if not fine then
 		print("[ERROR] [InPoly]: " .. ret)
+		return false
 	end
 
 	for k, v in pairs(ret) do
@@ -43,3 +44,4 @@ function EGPD2.Math.inPoly(x, y, polydata)
 
 	return false
 end
+
