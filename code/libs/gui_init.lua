@@ -13,16 +13,6 @@ function EGPD2.Initlsgil2Buttons()
 	end)
 	ButtonPosY = ButtonPosY + 40
 
-	lsglil2.NewObject("ButtonTypeTriangle", "button")
-	lsglil2.SetObjectPosition("ButtonTypeTriangle", 4, ButtonPosY)
-	lsglil2.SetObjectScale("ButtonTypeTriangle", 118, 32)
-	lsglil2.SetObjectData("ButtonTypeTriangle", "text", "Triangle")
-	lsglil2.SetObjectData("ButtonTypeTriangle", "col", {0.2, 0.4, 0.2})
-	lsglil2.SetObjectData("ButtonTypeTriangle", "onPress", function(GUITime)
-		EGPD2.CurrObjectType = "triangle"
-	end)
-	ButtonPosY = ButtonPosY + 40
-
 
 	lsglil2.NewObject("ButtonTypeCircle", "button")
 	lsglil2.SetObjectPosition("ButtonTypeCircle", 4, ButtonPosY)

@@ -10,10 +10,20 @@ love.graphics.setCanvas()
 
 EGPD2.ImgData = tempCanvas:newImageData()
 
-function EGPD2.StartTranslatedStuff()
-	love.graphics.push()
+function EGPD2.TranslateVisual()
 	love.graphics.translate(EGPD2.CurrPosOffset[1] + EGPD2.CenterPos[1], EGPD2.CurrPosOffset[2] + EGPD2.CenterPos[2])
 	love.graphics.scale(EGPD2.CurrZoom, EGPD2.CurrZoom)
+end
+
+function EGPD2.InvertTranslateVisual()
+	love.graphics.translate(-EGPD2.CurrPosOffset[1] + EGPD2.CenterPos[1], -EGPD2.CurrPosOffset[2] + EGPD2.CenterPos[2])
+	love.graphics.scale(-EGPD2.CurrZoom, -EGPD2.CurrZoom)
+end
+
+
+function EGPD2.StartTranslatedStuff()
+	love.graphics.push()
+	EGPD2.TranslateVisual()
 end
 
 function EGPD2.EndTranslatedStuff()

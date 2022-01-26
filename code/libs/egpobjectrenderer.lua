@@ -2,10 +2,16 @@ EGPD2 = EGPD2 or {}
 
 EGPOBJR = EGPOBJR or {}
 EGPOBJR.ObjectCallables = {}
+
+local white = love.graphics.newImage("res/white.png") -- horrendous but i cannot rotate with love.graphics.rectangle
 EGPOBJR.ObjectCallables["box"] = function(obj)
 	love.graphics.setColor(obj.r / 255, obj.g / 255, obj.b / 255, obj.a / 255)
 
-	love.graphics.rectangle("fill", obj.x - (obj.w / 2), obj.y - (obj.h / 2), obj.w, obj.h)
+	if obj.rot == 0 then
+		love.graphics.rectangle("fill", obj.x - (obj.w / 2), obj.y - (obj.h / 2), obj.w, obj.h)
+	else
+		love.graphics.draw(white, obj.x, obj.y, math.rad(obj.rot), obj.w, obj.h, 0.5, 0.5)
+	end
 end
 
 EGPOBJR.ObjectCallables["circle"] = function(obj)

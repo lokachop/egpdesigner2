@@ -35,11 +35,21 @@ function EGPD2.ObjectList.DeleteObject(id)
 	EGPD2.ObjectList.Objects[id] = nil
 end
 
+EGPD2.ObjectList.ColoursForObjTypes = {
+	["box"] = {0.2, 0.4, 0.2},
+	["circle"] = {0.2, 0.4, 0.2},
+	["poly"] = {0.2, 0.2, 0.4},
+	["line"] = {0.4, 0.2, 0.2},
+	["text"] = {0.4, 0.4, 0.2}
+}
+
+
 function EGPD2.ObjectList.MakeObject(obj, id)
 	local mkid = "ObjListButton" .. id
 	lsglil2.NewObject(mkid, "button")
 	lsglil2.SetObjectData(mkid, "text", "[#" .. id .. "] " .. obj.type)
 	lsglil2.SetObjectScale(mkid, 124, 16)
+	lsglil2.SetObjectData(mkid, "col", EGPD2.ObjectList.ColoursForObjTypes[obj.type])
 	lsglil2.SetObjectData(mkid, "onPress", function(edata)
 		if not lsglil2.TextEntryActive() then
 			EGPD2.SelectObject(id)
@@ -216,8 +226,16 @@ EGPD2.DynamicUI.ConfMakers["fidelity"] = function(obj)
 		edata.text = num
 		obj.fidelity = num
 	end, {0.4, 0.6, 0.6})
-	EGPD2.DynamicUI.LastHeight = EGPD2.DynamicUI.LastHeight + EGPD2.DynamicUI.AdderStep
 end
+
+EGPD2.DynamicUI.ConfMakers["rot"] = function(obj)
+	MakeEntryNum("confrot", "Rotation", "Degrees", obj.rot, function(edata)
+		local num = EGPD2.FormatStringToNum(edata.text)
+		edata.text = num
+		obj.rot = num
+	end)
+end
+
 
 EGPD2.DynamicUI.ConfMakers["r"] = function(obj)
 	MakeObjectAndAddToTable("confLabelColour", "label")
@@ -285,7 +303,7 @@ EGPD2.DynamicUI.ConfMakers["r"] = function(obj)
 end
 
 EGPD2.DynamicUI.MakeOrder = {
-	"w", "h", "r", "x", "y", "fidelity", "fontsize", "alignx", "aligny", "message"
+	"w", "h", "r", "x", "y", "rot", "fidelity", "fontsize", "alignx", "aligny", "message"
 }
 
 

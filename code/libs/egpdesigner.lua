@@ -27,7 +27,8 @@ EGPD2.PresetTableCopiesForTypes["box"] = {
 	type = "box",
 	w = 16,
 	h = 16,
-	drawtype = "nopoly"
+	drawtype = "nopoly",
+	rot = 0
 }
 
 
