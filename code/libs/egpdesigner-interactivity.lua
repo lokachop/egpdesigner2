@@ -62,7 +62,11 @@ end
 
 EGPD2.InputCallablesSpace = {
 	["select"] = function()
-		EGPD2.CurrentMode = "add"
+		if EGPD2.Objects[EGPD2.SelectedObject] ~= nil and EGPD2.Objects[EGPD2.SelectedObject].drawtype == "poly" then
+			EGPD2.CurrentMode = "drawpoly"
+		else
+			EGPD2.CurrentMode = "add"
+		end
 	end,
 	["add"] = function()
 		EGPD2.CurrentMode = "select"
@@ -78,7 +82,10 @@ EGPD2.InputCallablesSpace = {
 
 function EGPD2.HandleInputs(key)
 	if key == "space" then
-		pcall(EGPD2.InputCallablesSpace[EGPD2.CurrentMode])
+		local fine, err = pcall(EGPD2.InputCallablesSpace[EGPD2.CurrentMode])
+		if not fine then
+			print("[ERR] [SPCHNDL]; " .. err)
+		end
 	end
 end
 
@@ -120,6 +127,8 @@ end
 function EGPD2.HandleDrawPoly(x, y, button)
 	if button == 1 then
 		local tx, ty = EGPD2.MouseToScreen(x, y)
+		tx = math.floor(tx)
+		ty = math.floor(ty)
 
 		local tbl = EGPD2.PolyData[EGPD2.SelectedObject]
 		tbl[#tbl + 1] = tx

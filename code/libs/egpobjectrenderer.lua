@@ -70,11 +70,11 @@ EGPOBJR.ObjectCallables["poly"] = function(obj)
 
 	if obj.id == EGPD2.SelectedObject then
 		local curr = love.graphics.getShader()
-		love.graphics.setColor(math.abs(1 - obj.r / 255), math.abs(1 - obj.g / 255), math.abs(1 - obj.b / 255), obj.a / 255)
+		love.graphics.setColor(0.1 + obj.r / 255, 0.1 + obj.g / 255, 0.1 + obj.b / 255, obj.a / 255)
 		love.graphics.setShader(polyPointShader)
 
 		for i = 1, #polyData, 2 do
-			love.graphics.rectangle("fill", polyData[i] - 2, polyData[i + 1] - 2, 4, 4)
+			love.graphics.rectangle("fill", polyData[i], polyData[i + 1], 1, 1)
 		end
 		love.graphics.setShader(curr)
 	end
