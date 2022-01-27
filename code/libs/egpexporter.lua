@@ -11,20 +11,25 @@ function EGPD2.Exporters.Text.Export(fpath)
 		return
 	end
 
+	print("--==loka egd saver v0.3==--")
+
 	local exportStr = "["
 	for k, v in pairs(EGPD2.Objects) do
+		exportStr = exportStr .. "{"
 		for k2, v2 in pairs(v) do
 			exportStr = exportStr .. "|" .. k2 .. ":" .. v2
 		end
+		exportStr = exportStr .. "}"
 	end
 	exportStr = exportStr .. "]"
 
 	exportStr = exportStr .. "<"
 	for k, v in pairs(EGPD2.PolyData) do
-		exportStr = exportStr .. "{i" .. k .. ":"
+		exportStr = exportStr .. "{:" .. k .. ":"
 		for k2, v2 in pairs(v) do
 			exportStr = exportStr .. "(" .. v2
 		end
+		exportStr = exportStr .. "}"
 	end
 	exportStr = exportStr .. ">"
 
@@ -45,6 +50,40 @@ function EGPD2.Exporters.GPU.Export(fpath)
 	print("this would export \"" .. fpath .. "\" to wireGPU but i didnt code it yet")
 end
 
+local function DecodeObject(str)
+	local dataelements = {}
+	print("decoding object " .. str)
+	-- example object for reference
+	-- {|1:string|x:18|id:1|y:10|rot:0|drawtype:nopoly|g:255|b:255|w:16|r:255|h:16|a:255|type:box}
+	local data = string.gmatch(str, "|[%w:-]+")
+	for el in data do
+		--print("element " .. el)
+		local key = string.match(el, "[%w:-]+:")
+		local value = string.match(el, ":[%w:-]+")
+		key = string.sub(key, 1, #key - 1)
+		value = string.sub(value, 2, #value)
+
+		print("found key " .. tostring(key) .. " with value " .. tostring(value) .. " inside")
+		if string.match(value, "[-%d]+") then
+			dataelements[key] = tonumber(value)
+		else
+			dataelements[key] = value
+		end
+	end
+
+	return dataelements
+end
+
+local function DecodeObjectsLoop(str)
+	local ret = string.gmatch(str, "%b{}")
+	local objects = {}
+	for obj in ret do
+		local dat = DecodeObject(obj)
+		objects[dat.id] = dat
+	end
+
+	return objects
+end
 
 EGPD2.Importer = {}
 function EGPD2.Importer.Import(fpath)
@@ -53,12 +92,22 @@ function EGPD2.Importer.Import(fpath)
 		return
 	end
 
+	print("--==loka egd loader v0.3==--")
+
 	local filedata = love.filesystem.read(fpath .. ".egd")
 	--print("READ; " .. filedata)
 
-	local objdata = string.match(filedata, "%[[%g+]+%]")
-	print("object data: " .. objdata)
+	local objdata = string.match(filedata, "%[[%g]+%]")
+	local polydata = string.match(filedata, "<[%g]+%>")
 
+	print("object data: " .. objdata)
+	print("\n\n")
+	print("poly data: " .. tostring(polydata))
+
+	EGPD2.Objects = {}
+	EGPD2.PolyData = {}
+
+	EGPD2.Objects = DecodeObjectsLoop(objdata)
 end
 
 
