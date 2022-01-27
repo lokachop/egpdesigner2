@@ -6,19 +6,33 @@ EGPD2.Exporters.Text = {}
 
 
 function EGPD2.Exporters.Text.Export(fpath)
-	local exportStr = "["
-	for k, v in pairs(EGPD2.Objects) do
-		exportStr = exportStr .. "{|i" .. k .. "|t" .. v.type .. "|x" .. v.x .. "|y" .. "|r" .. v.r .. "|g" .. v.g .. "|b" .. v.b
+	if fpath == "" or fpath == nil then
+		print("invalid savepath")
+		return
 	end
 
-	exportStr = exportStr .. "["
+	local exportStr = "["
+	for k, v in pairs(EGPD2.Objects) do
+		for k2, v2 in pairs(v) do
+			exportStr = exportStr .. "|" .. k2 .. ":" .. v2
+		end
+	end
+	exportStr = exportStr .. "]"
+
+	exportStr = exportStr .. "<"
 	for k, v in pairs(EGPD2.PolyData) do
-		exportStr = exportStr .. "{i" .. k
+		exportStr = exportStr .. "{i" .. k .. ":"
 		for k2, v2 in pairs(v) do
 			exportStr = exportStr .. "(" .. v2
 		end
 	end
-	print(exportStr)
+	exportStr = exportStr .. ">"
+
+	print("RawContents; " .. exportStr)
+
+	love.filesystem.write(fpath .. ".egd", exportStr)
+	love.system.openURL("file://" .. love.filesystem.getSaveDirectory())
+	print("Saved as " .. fpath .. ".egd")
 end
 
 EGPD2.Exporters.EGP = {}
@@ -34,7 +48,17 @@ end
 
 EGPD2.Importer = {}
 function EGPD2.Importer.Import(fpath)
-	print("this would import \"" .. fpath .. "\" to egpdesigner but i didnt code it yet")
+	if fpath == "" or fpath == nil then
+		print("invalid savepath")
+		return
+	end
+
+	local filedata = love.filesystem.read(fpath .. ".egd")
+	--print("READ; " .. filedata)
+
+	local objdata = string.match(filedata, "%[[%g+]+%]")
+	print("object data: " .. objdata)
+
 end
 
 

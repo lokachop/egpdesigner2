@@ -76,7 +76,6 @@ function EGPD2.Initlsgil2Buttons()
 	lsglil2.SetObjectData("ButtonLoadEGD", "text", "Load from .egd")
 	lsglil2.SetObjectData("ButtonLoadEGD", "col", {0.0, 0.0, 0.4})
 	lsglil2.SetObjectData("ButtonLoadEGD", "onPress", function(GUITime)
-		EGPD2.Importer.Import(lsglil2.GetObjectData("TextEntryName")["text"])
 		local fine, err = pcall(EGPD2.Importer.Import, lsglil2.GetObjectData("TextEntryName")["text"])
 		if not fine then
 			print("error loading EGD!; " .. err)
