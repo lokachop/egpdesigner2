@@ -1,7 +1,8 @@
 EGPD2 = EGPD2 or {}
 EGPD2.CurrObjectType = "box"
 EGPD2.CurrentMode = "select"
-EGPD2.SelectedObject = 0
+EGPD2.SelectedObject = 1
+EGPD2.SelectedSubPolyID = 0
 local ScrollPosObjList = {768, 0}
 
 
@@ -49,43 +50,99 @@ function EGPD2.HandleDrawing(x, y, button)
 
 	if button == 1 then
 		local tx, ty = EGPD2.MouseToScreen(x, y)
-		local id = #EGPD2.Objects + 1
-		EGPD2.CreateObjectCurrSelected(tx, ty, id)
-		EGPD2.SelectedObject = id
-		if id > EGPD2.HighestID then
-			EGPD2.HighestID = id
+		EGPD2.CreateObjectCurrSelected(tx, ty, EGPD2.SelectedObject)
+		if EGPD2.SelectedObject > EGPD2.HighestID then
+			EGPD2.HighestID = EGPD2.SelectedObject
 		end
 
 		EGPD2.MakeUIForObjectProperties()
 	end
 end
 
-EGPD2.InputCallablesSpace = {
-	["select"] = function()
-		if EGPD2.Objects[EGPD2.SelectedObject] ~= nil and EGPD2.Objects[EGPD2.SelectedObject].drawtype == "poly" then
-			EGPD2.CurrentMode = "drawpoly"
-		else
-			EGPD2.CurrentMode = "add"
+--[[
+EGPD2.InputCallables = {
+	["select"] = function(key)
+		if key == "space" then
+			if EGPD2.Objects[EGPD2.SelectedObject] ~= nil and EGPD2.Objects[EGPD2.SelectedObject].drawtype == "poly" then
+				EGPD2.CurrentMode = "drawpoly"
+			else
+				EGPD2.CurrentMode = "add"
+			end
 		end
 	end,
-	["add"] = function()
+	["add"] = function(key)
+		if key == "space" then
+			EGPD2.CurrentMode = "select"
+		end
+	end,
+	["colpick"] = function(key)
+		if key == "space" then
+			EGPD2.CurrentMode = "select"
+		end
+	end,
+	["drawpoly"] = function(key)
+		if key == "space" then
+			EGPD2.CurrentMode = "select"
+		end
+	end
+}
+]]--
+
+EGPD2.AdvInputCallables = {
+	["select"] = {
+		["space"] = function(key)
+		end
+	},
+	["add"] = {
+		["space"] = function(key)
+			EGPD2.CurrentMode = "select"
+		end
+	},
+	["colpick"] = {
+		["space"] = function(key)
+			EGPD2.CurrentMode = "select"
+		end
+	},
+	["drawpoly"] = {
+		["space"] = function(key)
+			EGPD2.CurrentMode = "select"
+		end
+	}
+}
+
+EGPD2.GlobalCallOnKey = {
+	["w"] = function()
+		EGPD2.SelectedObject = EGPD2.SelectedObject + 1
+		EGPD2.MakeUIForObjectProperties()
+	end,
+	["s"] = function()
+		EGPD2.SelectedObject = EGPD2.SelectedObject - 1
+		EGPD2.MakeUIForObjectProperties()
+	end,
+	["r"] = function()
 		EGPD2.CurrentMode = "select"
 	end,
-	["colpick"] = function()
-		EGPD2.CurrentMode = "select"
+	["f"] = function()
+		EGPD2.CurrentMode = "add"
 	end,
-	["drawpoly"] = function()
-		EGPD2.CurrentMode = "select"
+	["t"] = function()
+		if EGPD2.Objects[EGPD2.SelectedObject] ~= nil and EGPD2.Objects[EGPD2.SelectedObject].drawtype == "poly" then
+			EGPD2.CurrentMode = "drawpoly"
+		end
 	end
 }
 
-
 function EGPD2.HandleInputs(key)
-	if key == "space" then
-		local fine, err = pcall(EGPD2.InputCallablesSpace[EGPD2.CurrentMode])
-		if not fine then
-			print("[ERR] [SPCHNDL]; " .. err)
-		end
+	pcall(EGPD2.GlobalCallOnKey[key], key)
+
+	if not EGPD2.AdvInputCallables[EGPD2.CurrentMode][key] then
+		print("[" .. EGPD2.CurrentMode .. "] undefined key; " .. key)
+		return
+	end
+
+	local fine, err = pcall(EGPD2.AdvInputCallables[EGPD2.CurrentMode][key], key)
+	if not fine then
+		print("[ERR] [SPCHNDL]; " .. err)
 	end
 end
 

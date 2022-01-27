@@ -68,6 +68,23 @@ local polyPointShader = love.graphics.newShader([[
 EGPOBJR.ObjectCallables["poly"] = function(obj)
 	local polyData = EGPD2.PolyData[obj.id]
 
+	love.graphics.setColor(obj.r / 255, obj.g / 255, obj.b / 255, obj.a / 255)
+
+
+
+	if love.math.isConvex(polyData) then
+		-- is  convex we can skip expensive triangulation
+		love.graphics.polygon("fill", polyData)
+	else
+		-- time to triangulate :/
+		local fine, dat = pcall(love.math.triangulate, polyData)
+		if fine then
+			for k, v in pairs(dat) do
+				love.graphics.polygon("fill", v[1], v[2], v[3], v[4], v[5], v[6])
+			end
+		end
+	end
+
 	if obj.id == EGPD2.SelectedObject then
 		local curr = love.graphics.getShader()
 		love.graphics.setColor(0.1 + obj.r / 255, 0.1 + obj.g / 255, 0.1 + obj.b / 255, obj.a / 255)
@@ -79,21 +96,7 @@ EGPOBJR.ObjectCallables["poly"] = function(obj)
 		love.graphics.setShader(curr)
 	end
 
-	love.graphics.setColor(obj.r / 255, obj.g / 255, obj.b / 255, obj.a / 255)
 
-
-
-	if love.math.isConvex(polyData) then
-		-- is  convex we can skip expensive triangulation
-		love.graphics.polygon("fill", polyData)
-	else
-		-- time to triangulate :/
-		local dat = love.math.triangulate(polyData)
-
-		for k, v in pairs(dat) do
-			love.graphics.polygon("fill", v[1], v[2], v[3], v[4], v[5], v[6])
-		end
-	end
 end
 
 
