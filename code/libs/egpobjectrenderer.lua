@@ -1,11 +1,13 @@
 EGPD2 = EGPD2 or {}
+EGPD2.RenderTransparency = 255
+
 
 EGPOBJR = EGPOBJR or {}
 EGPOBJR.ObjectCallables = {}
 
 local white = love.graphics.newImage("res/white.png") -- horrendous but i cannot rotate with love.graphics.rectangle
 EGPOBJR.ObjectCallables["box"] = function(obj)
-	love.graphics.setColor(obj.r / 255, obj.g / 255, obj.b / 255, obj.a / 255)
+	love.graphics.setColor(obj.r / 255, obj.g / 255, obj.b / 255, (obj.a / 255) * (EGPD2.RenderTransparency / 255))
 
 	if obj.rot == 0 then
 		love.graphics.rectangle("fill", obj.x - (obj.w / 2), obj.y - (obj.h / 2), obj.w, obj.h)
@@ -15,7 +17,7 @@ EGPOBJR.ObjectCallables["box"] = function(obj)
 end
 
 EGPOBJR.ObjectCallables["circle"] = function(obj)
-	love.graphics.setColor(obj.r / 255, obj.g / 255, obj.b / 255, obj.a / 255)
+	love.graphics.setColor(obj.r / 255, obj.g / 255, obj.b / 255, (obj.a / 255) * (EGPD2.RenderTransparency / 255))
 
 	if obj.fidelity < 3 then
 		obj.fidelity = 3
@@ -39,7 +41,7 @@ end
 local fontText = love.graphics.newFont(12)
 
 EGPOBJR.ObjectCallables["text"] = function(obj)
-	love.graphics.setColor(obj.r / 255, obj.g / 255, obj.b / 255, obj.a / 255)
+	love.graphics.setColor(obj.r / 255, obj.g / 255, obj.b / 255, (obj.a / 255) * (EGPD2.RenderTransparency / 255))
 
 	love.graphics.print(obj.message, obj.x, obj.y, math.rad(obj.rot), obj.fontsize / 12, obj.fontsize / 12, (fontText:getWidth(obj.message) / 2) * obj.alignx, (fontText:getHeight() / 2) * obj.aligny)
 end
@@ -68,7 +70,7 @@ local polyPointShader = love.graphics.newShader([[
 EGPOBJR.ObjectCallables["poly"] = function(obj)
 	local polyData = EGPD2.PolyData[obj.id]
 
-	love.graphics.setColor(obj.r / 255, obj.g / 255, obj.b / 255, obj.a / 255)
+	love.graphics.setColor(obj.r / 255, obj.g / 255, obj.b / 255, (obj.a / 255) * (EGPD2.RenderTransparency / 255))
 
 
 

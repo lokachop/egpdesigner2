@@ -3,11 +3,22 @@ EGPD2.Exporters = {}
 
 
 EGPD2.Exporters.Text = {}
-function EGPD2.Exporters.Text.Export(fpath)
-	for k, v in pairs(EGPD2.Objects) do
 
+
+function EGPD2.Exporters.Text.Export(fpath)
+	local exportStr = "["
+	for k, v in pairs(EGPD2.Objects) do
+		exportStr = exportStr .. "{|i" .. k .. "|t" .. v.type .. "|x" .. v.x .. "|y" .. "|r" .. v.r .. "|g" .. v.g .. "|b" .. v.b
 	end
-	--print("this would export \"" .. fpath .. "\" to .egd but i didnt code it yet")
+
+	exportStr = exportStr .. "["
+	for k, v in pairs(EGPD2.PolyData) do
+		exportStr = exportStr .. "{i" .. k
+		for k2, v2 in pairs(v) do
+			exportStr = exportStr .. "(" .. v2
+		end
+	end
+	print(exportStr)
 end
 
 EGPD2.Exporters.EGP = {}

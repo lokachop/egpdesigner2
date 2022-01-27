@@ -63,7 +63,10 @@ function EGPD2.Initlsgil2Buttons()
 	lsglil2.SetObjectData("ButtonSaveAsEGD", "text", "Save as .egd")
 	lsglil2.SetObjectData("ButtonSaveAsEGD", "col", {0.0, 0.4, 0.0})
 	lsglil2.SetObjectData("ButtonSaveAsEGD", "onPress", function(GUITime)
-		EGPD2.Exporters.Text.Export(lsglil2.GetObjectData("TextEntryName")["text"])
+		local fine, err = pcall(EGPD2.Exporters.Text.Export, lsglil2.GetObjectData("TextEntryName")["text"])
+		if not fine then
+			print("error exporting EGD!; " .. err)
+		end
 	end)
 
 
@@ -74,6 +77,10 @@ function EGPD2.Initlsgil2Buttons()
 	lsglil2.SetObjectData("ButtonLoadEGD", "col", {0.0, 0.0, 0.4})
 	lsglil2.SetObjectData("ButtonLoadEGD", "onPress", function(GUITime)
 		EGPD2.Importer.Import(lsglil2.GetObjectData("TextEntryName")["text"])
+		local fine, err = pcall(EGPD2.Importer.Import, lsglil2.GetObjectData("TextEntryName")["text"])
+		if not fine then
+			print("error loading EGD!; " .. err)
+		end
 	end)
 
 	lsglil2.NewObject("ButtonExportAsEGP", "button")
@@ -82,7 +89,10 @@ function EGPD2.Initlsgil2Buttons()
 	lsglil2.SetObjectData("ButtonExportAsEGP", "text", "Export to EGP")
 	lsglil2.SetObjectData("ButtonExportAsEGP", "col", {0.1, 0.2, 0.3})
 	lsglil2.SetObjectData("ButtonExportAsEGP", "onPress", function(GUITime)
-		EGPD2.Exporters.EGP.Export(lsglil2.GetObjectData("TextEntryName")["text"])
+		local fine, err = pcall(EGPD2.Exporters.EGP.Export, lsglil2.GetObjectData("TextEntryName")["text"])
+		if not fine then
+			print("error exporting EGP!; " .. err)
+		end
 	end)
 
 	lsglil2.NewObject("ButtonExportAsGPU", "button")
@@ -91,7 +101,10 @@ function EGPD2.Initlsgil2Buttons()
 	lsglil2.SetObjectData("ButtonExportAsGPU", "text", "Export to wireGPU")
 	lsglil2.SetObjectData("ButtonExportAsGPU", "col", {0.1, 0.3, 0.2})
 	lsglil2.SetObjectData("ButtonExportAsGPU", "onPress", function(GUITime)
-		EGPD2.Exporters.GPU.Export(lsglil2.GetObjectData("TextEntryName")["text"])
+		local fine, err = pcall(EGPD2.Exporters.GPU.Export, lsglil2.GetObjectData("TextEntryName")["text"])
+		if not fine then
+			print("error exporting GPU!; " .. err)
+		end
 	end)
 
 	lsglil2.NewObject("TextEntryName", "textentry")
@@ -105,4 +118,23 @@ function EGPD2.Initlsgil2Buttons()
 		edata["text"] = fstring
 		EGPD2.ExportName = fstring
 	end)
+
+	lsglil2.NewObject("TextEntryTransparencyLabel", "label")
+	lsglil2.SetObjectPosition("TextEntryTransparencyLabel", 512 + 128 + 16, 514)
+	lsglil2.SetObjectScale("TextEntryTransparencyLabel", 92, 16)
+	lsglil2.SetObjectData("TextEntryTransparencyLabel", "text", "Render Transparency")
+
+	lsglil2.NewObject("TextEntryTransparency", "textentry")
+	lsglil2.SetObjectPosition("TextEntryTransparency", 512 + 128 + 47, 546)
+	lsglil2.SetObjectScale("TextEntryTransparency", 32, 16)
+	lsglil2.SetObjectData("TextEntryTransparency", "col", {0.4, 0.4, 0.4})
+	lsglil2.SetObjectData("TextEntryTransparency", "backgroundtext", "int")
+	lsglil2.SetObjectData("TextEntryTransparency", "text", EGPD2.RenderTransparency)
+	lsglil2.SetObjectData("TextEntryTransparency", "releasecall", function(edata)
+		local str = string.lower(edata["text"])
+		local fnum = EGPD2.FormatStringToNum(str)
+		edata["text"] = fnum
+		EGPD2.RenderTransparency = fnum
+	end)
+
 end

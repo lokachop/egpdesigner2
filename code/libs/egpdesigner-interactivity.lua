@@ -141,6 +141,7 @@ EGPD2.GlobalCallOnKey = {
 		end
 
 		EGPD2.SelectedObject = EGPD2.SelectedObject + 1
+		EGPD2.SelectedSubPolyID = 1
 		EGPD2.MakeUIForObjectProperties()
 	end,
 	["s"] = function()
@@ -153,6 +154,7 @@ EGPD2.GlobalCallOnKey = {
 		end
 
 		EGPD2.SelectedObject = EGPD2.SelectedObject - 1
+		EGPD2.SelectedSubPolyID = 1
 		EGPD2.MakeUIForObjectProperties()
 	end,
 	["r"] = function()
