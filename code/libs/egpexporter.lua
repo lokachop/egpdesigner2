@@ -88,14 +88,13 @@ end
 local function DecodePolygon(str)
 	print("decoding polygon " .. str)
 	local cleanedPoly = string.gsub(str, "[{}:]", "")
-	print("cleaned; " .. cleanedPoly)
+	print("(cleaned: " .. cleanedPoly .. ")")
 
 	local idx = 1
 	local coords = {}
 	local decoords = string.gmatch(cleanedPoly, "%([%-]?[%d]+")
 	for pos in decoords do
 		local cpos = string.sub(pos, 2, #pos)
-		print("got pos " .. cpos)
 		coords[idx] = tonumber(cpos)
 		idx = idx + 1
 	end
@@ -112,11 +111,6 @@ local function DecodePolyData(str)
 		id = tonumber(id)
 		print("id; " .. id)
 		pdata[id] = DecodePolygon(obj)
-
-		print("debug data; ")
-		for k, v in pairs(pdata[id]) do
-			print(k, v)
-		end
 	end
 
 	return pdata
