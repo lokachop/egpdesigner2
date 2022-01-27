@@ -64,6 +64,15 @@ function EGPD2.ObjectList.MakeObject(obj, id)
 end
 
 
+function EGPD2.ObjectList.Refresh()
+	for k, v in pairs(EGPD2.ObjectList.Objects) do
+		EGPD2.ObjectList.DeleteObject(k)
+	end
+
+	for k, v in pairs(EGPD2.Objects) do
+		EGPD2.ObjectList.MakeObject(v, v.id)
+	end
+end
 
 function EGPD2.DynamicUI.UpdateColours()
 	if EGPD2.Objects[EGPD2.SelectedObject] == nil then

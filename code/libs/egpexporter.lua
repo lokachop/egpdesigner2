@@ -162,6 +162,8 @@ function EGPD2.Importer.Import(fpath)
 	end
 
 	print("loading successful!")
+
+	EGPD2.ObjectList.Refresh()
 end
 
 
