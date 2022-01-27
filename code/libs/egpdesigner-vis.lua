@@ -95,7 +95,7 @@ end
 
 function EGPD2.RenderInformation()
 	love.graphics.setColor(0, 1, 0, 1)
-	love.graphics.printf("object count: " .. tostring(#EGPD2.Objects) .. "\n (max 300)", 128, 0, 512, "center")
+	love.graphics.printf("object count: " .. tostring(EGPD2.GetObjectCount()) .. "\n (max 300)", 128, 0, 512, "center")
 
 
 	local typestring = "current object type: " .. EGPD2.CurrObjectType

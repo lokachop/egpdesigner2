@@ -4,7 +4,10 @@ EGPD2.Exporters = {}
 
 EGPD2.Exporters.Text = {}
 function EGPD2.Exporters.Text.Export(fpath)
-	print("this would export \"" .. fpath .. "\" to .egd but i didnt code it yet")
+	for k, v in pairs(EGPD2.Objects) do
+
+	end
+	--print("this would export \"" .. fpath .. "\" to .egd but i didnt code it yet")
 end
 
 EGPD2.Exporters.EGP = {}

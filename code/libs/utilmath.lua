@@ -10,6 +10,12 @@ function EGPD2.Math.inBox(cx, cy, bx, by, sx, sy)
 	return EGPD2.Math.inrange(cx, bx, bx + sx) and EGPD2.Math.inrange(cy, by, by + sy)
 end
 
+-- optimized clamp; https://love2d.org/forums/viewtopic.php?t=1856
+function EGPD2.Math.Clamp(num, min, max)
+	return math.max(min, math.min(max, num))
+end
+
+
 
 -- implementation from https://www.geeksforgeeks.org/check-whether-a-given-point-lies-inside-a-triangle-or-not/
 local function area(x1, y1, x2, y2, x3, y3)

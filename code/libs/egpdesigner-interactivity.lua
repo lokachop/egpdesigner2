@@ -2,7 +2,7 @@ EGPD2 = EGPD2 or {}
 EGPD2.CurrObjectType = "box"
 EGPD2.CurrentMode = "select"
 EGPD2.SelectedObject = 1
-EGPD2.SelectedSubPolyID = 0
+EGPD2.SelectedSubPolyID = 1
 local ScrollPosObjList = {768, 0}
 
 
@@ -18,6 +18,9 @@ end
 
 function EGPD2.SelectObject(id)
 	EGPD2.SelectedObject = id
+	if EGPD2.Objects[id].drawtype == "poly" then
+		EGPD2.SelectedSubPolyID = #EGPD2.PolyData[id] + 1
+	end
 	EGPD2.MakeUIForObjectProperties()
 end
 
@@ -106,16 +109,49 @@ EGPD2.AdvInputCallables = {
 	["drawpoly"] = {
 		["space"] = function(key)
 			EGPD2.CurrentMode = "select"
+		end,
+		["q"] = function(key)
+			local id = EGPD2.SelectedObject
+			if EGPD2.Objects[id] and EGPD2.Objects[id].drawtype == "poly" then
+				EGPD2.SelectedSubPolyID = EGPD2.Math.Clamp(EGPD2.SelectedSubPolyID - 2, 1, #EGPD2.PolyData[EGPD2.SelectedObject] + 1)
+			end
+		end,
+		["e"] = function(key)
+			local id = EGPD2.SelectedObject
+			if EGPD2.Objects[id] and EGPD2.Objects[id].drawtype == "poly" then
+				EGPD2.SelectedSubPolyID = EGPD2.Math.Clamp(EGPD2.SelectedSubPolyID + 2, 1, #EGPD2.PolyData[EGPD2.SelectedObject] + 1)
+			end
 		end
 	}
 }
 
+local toCallModes = {
+	["drawpoly"] = true,
+	["colpick"] = true
+}
+
 EGPD2.GlobalCallOnKey = {
 	["w"] = function()
+		if toCallModes[EGPD2.CurrentMode] then
+			EGPD2.CurrentMode = "select"
+		end
+
+		if not EGPD2.CanInteract() then
+			return
+		end
+
 		EGPD2.SelectedObject = EGPD2.SelectedObject + 1
 		EGPD2.MakeUIForObjectProperties()
 	end,
 	["s"] = function()
+		if toCallModes[EGPD2.CurrentMode] then
+			EGPD2.CurrentMode = "select"
+		end
+
+		if not EGPD2.CanInteract() then
+			return
+		end
+
 		EGPD2.SelectedObject = EGPD2.SelectedObject - 1
 		EGPD2.MakeUIForObjectProperties()
 	end,
@@ -187,13 +223,21 @@ function EGPD2.HandleDrawPoly(x, y, button)
 		tx = math.floor(tx)
 		ty = math.floor(ty)
 
-		local tbl = EGPD2.PolyData[EGPD2.SelectedObject]
-		tbl[#tbl + 1] = tx
-		tbl[#tbl + 1] = ty
+		local spoly = EGPD2.Math.Clamp(EGPD2.SelectedSubPolyID, 1, 256)
+
+
+		EGPD2.PolyData[EGPD2.SelectedObject][spoly] = tx
+		EGPD2.PolyData[EGPD2.SelectedObject][spoly + 1] = ty
+
+		EGPD2.SelectedSubPolyID = EGPD2.Math.Clamp(EGPD2.SelectedSubPolyID + 2, 1, 256)
 	elseif button == 2 then
-		local tbl = EGPD2.PolyData[EGPD2.SelectedObject]
-		tbl[#tbl] = nil
-		tbl[#tbl] = nil
+		local spoly = EGPD2.Math.Clamp(EGPD2.SelectedSubPolyID, 1, 256)
+
+		--EGPD2.PolyData[EGPD2.SelectedObject][spoly] = nil
+		--EGPD2.PolyData[EGPD2.SelectedObject][spoly] = nil
+		table.remove(EGPD2.PolyData[EGPD2.SelectedObject], spoly)
+		table.remove(EGPD2.PolyData[EGPD2.SelectedObject], spoly)
+		EGPD2.SelectedSubPolyID = EGPD2.Math.Clamp(EGPD2.SelectedSubPolyID - 2, 1, 256)
 	end
 end
 

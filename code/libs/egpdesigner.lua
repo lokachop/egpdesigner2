@@ -111,7 +111,19 @@ EGPD2.ObjectCreators["poly"] = function(x, y, id)
 end
 
 
+function EGPD2.SafePolyExit(id)
+	if EGPD2.Objects[id] and EGPD2.Objects[id].drawtype == "poly" then
+		EGPD2.CurrentMode = "select"
+		EGPD2.SelectedSubPolyID = 1
+	end
+end
+
+
 function EGPD2.DeleteObject(id)
+	if EGPD2.Objects[id].drawtype == "poly" then
+		EGPD2.CurrentMode = "select"
+	end
+
 	EGPD2.Objects[id] = nil
 	EGPD2.ObjectList.DeleteObject(id)
 	EGPD2.DynamicUI.WipeToDeleteUI()
@@ -160,6 +172,26 @@ function EGPD2.SafeDelete(id)
 	end
 end
 
+
+function EGPD2.GetObjectCount()
+	local IDCount = 0
+	for k, v in pairs(EGPD2.Objects) do
+		if v.type == "poly" and not love.math.isConvex(EGPD2.PolyData[k])  then
+			local fine, dat = pcall(love.math.triangulate, EGPD2.PolyData[k])
+			if not fine then
+				print("GetObjectCount triangulate error!")
+			end
+
+			for i = 1, #dat do
+				IDCount = IDCount + 1
+			end
+		end
+
+		IDCount = IDCount + 1
+	end
+
+	return IDCount
+end
 
 EGPD2.TouchCheckers = {
 	["nopoly"] = function(obj, x, y)
