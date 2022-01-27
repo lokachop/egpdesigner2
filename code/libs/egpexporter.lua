@@ -85,6 +85,44 @@ local function DecodeObjectsLoop(str)
 	return objects
 end
 
+local function DecodePolygon(str)
+	print("decoding polygon " .. str)
+	local cleanedPoly = string.gsub(str, "[{}:]", "")
+	print("cleaned; " .. cleanedPoly)
+
+	local idx = 1
+	local coords = {}
+	local decoords = string.gmatch(cleanedPoly, "%([%-]?[%d]+")
+	for pos in decoords do
+		local cpos = string.sub(pos, 2, #pos)
+		print("got pos " .. cpos)
+		coords[idx] = tonumber(cpos)
+		idx = idx + 1
+	end
+
+	return coords
+end
+
+local function DecodePolyData(str)
+	local ret = string.gmatch(str, "%b{}")
+	local pdata = {}
+	for obj in ret do
+		local id = string.match(obj, "%b::")
+		id = string.gsub(id, ":" , "")
+		id = tonumber(id)
+		print("id; " .. id)
+		pdata[id] = DecodePolygon(obj)
+
+		print("debug data; ")
+		for k, v in pairs(pdata[id]) do
+			print(k, v)
+		end
+	end
+
+	return pdata
+end
+
+
 EGPD2.Importer = {}
 function EGPD2.Importer.Import(fpath)
 	if fpath == "" or fpath == nil then
@@ -106,8 +144,24 @@ function EGPD2.Importer.Import(fpath)
 
 	EGPD2.Objects = {}
 	EGPD2.PolyData = {}
+	EGPD2.CurrZoom = 1
+	EGPD2.CurrPosOffset = {0, 0}
+	EGPD2.CenterPos = {384, 256}
+	EGPD2.CurrObjectType = "box"
+	EGPD2.CurrentMode = "select"
+	EGPD2.SelectedObject = 1
+	EGPD2.SelectedSubPolyID = 1
 
 	EGPD2.Objects = DecodeObjectsLoop(objdata)
+	EGPD2.PolyData = DecodePolyData(polydata)
+
+	for k, v in pairs(EGPD2.Objects) do
+		if v.id > EGPD2.HighestID then
+			EGPD2.HighestID = v.id
+		end
+	end
+
+	print("loading successful!")
 end
 
 

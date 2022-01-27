@@ -4,7 +4,6 @@ EGPD2.PolyData = {}
 EGPD2.CurrZoom = 1
 EGPD2.CurrPosOffset = {0, 0}
 EGPD2.CenterPos = {384, 256}
-EGPD2.ExportName = "exported"
 EGPD2.HighestID = 0
 
 EGPD2.ObjectList = EGPD2.ObjectList or {}
