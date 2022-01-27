@@ -104,9 +104,9 @@ EGPD2.ObjectCreators["poly"] = function(x, y, id)
 	tblcopy.y = math.floor(y)
 	tblcopy.id = id
 
+	EGPD2.PolyData[id] = {x, y}
 	EGPD2.PushObject(tblcopy, id)
 	EGPD2.CurrentMode = "drawpoly"
-	EGPD2.PolyData[id] = {}
 end
 
 
