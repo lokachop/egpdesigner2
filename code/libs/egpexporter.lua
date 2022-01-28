@@ -42,15 +42,102 @@ function EGPD2.Exporters.Text.Export(fpath)
 	print("Saved as " .. fpath .. ".egd")
 end
 
+
+
 EGPD2.Exporters.EGP = {}
+function EGPD2.Exporters.EGP.TranslatePos(x, y)
+	return x + 256, y + 256
+end
+
+EGPD2.Exporters.EGP.DebugOn = true
+
+local function TryToAddDebugToText(obj)
+	local code = "\n"
+	if EGPD2.Exporters.EGP.DebugOn then
+		code = code .. "#----BEGIN EGPD2 DEBUG----\n"
+		code = code .. "#OBJECT " .. obj.id .. "\n"
+		code = code .. "#TYPE " .. obj.type .. "\n"
+		code = code .. "#RGBA " .. obj.r .. ", " .. obj.g .. ", " .. obj.b .. ", " .. obj.a .. "\n"
+		code = code .. "#POSPREMOV " .. obj.x .. ", " .. obj.y .. "\n"
+		local tx, ty = EGPD2.Exporters.EGP.TranslatePos(obj.x, obj.y)
+		code = code .. "#POSPOSTMOV " .. tx .. ", " .. ty .. "\n"
+		code = code .. "#----END EGPD2 DEBUG----\n"
+	end
+
+	return code
+end
+
+EGPD2.Exporters.EGP.ObjectCallables = {
+	["box"] = function(obj, id)
+		local code = "\n"
+		code = code .. TryToAddDebugToText(obj)
+		local tx, ty = EGPD2.Exporters.EGP.TranslatePos(obj.x, obj.y)
+		code = code .. "    EGP:egpBox(" .. id .. ", vec2(" .. tx .. ", " .. ty .. "), vec2(" .. obj.w .. ", " .. obj.h .. ")\n"
+		code = code .. "    EGP:egpColor(" .. id .. ", vec4(" .. obj.r .. ", " .. obj.g .. ", " .. obj.b .. ", " .. obj.a .. ")\n"
+		code = code .. "    EGP:egpAngle(" .. id .. ", " .. obj.rot .. ")\n"
+		return code, 1
+	end,
+	["circle"] = function(obj, id)
+		local code = "\n"
+		code = code .. TryToAddDebugToText(obj)
+		local tx, ty = EGPD2.Exporters.EGP.TranslatePos(obj.x, obj.y)
+		code = code .. "    EGP:egpCircle(" .. id .. ", vec2(" .. tx .. ", " .. ty .. "), vec2(" .. obj.w .. ", " .. obj.h .. ")\n"
+		code = code .. "    EGP:egpColor(" .. id .. ", vec4(" .. obj.r .. ", " .. obj.g .. ", " .. obj.b .. ", " .. obj.a .. ")\n"
+		code = code .. "    EGP:egpFidelity(" .. id .. ", vec4(" .. obj.fidelity .. ")\n"
+		return code, 1
+	end,
+	["text"] = function(obj, id)
+		local code = "\n"
+		code = code .. TryToAddDebugToText(obj)
+		local tx, ty = EGPD2.Exporters.EGP.TranslatePos(obj.x, obj.y)
+		code = code .. "    EGP:egpText(" .. id .. ", " .. obj.message .. "vec2(" .. tx .. ", " .. ty .. "))\n"
+		code = code .. "    EGP:egpAlign(" .. id .. ", " .. obj.alignx .. ", " .. obj.aligny .. ")\n"
+		code = code .. "    EGP:egpColor(" .. id .. ", vec4(" .. obj.r .. ", " .. obj.g .. ", " .. obj.b .. ", " .. obj.a .. ")\n"
+		return code, 1
+	end,
+	["poly"] = function(obj, id)
+		local code = "\n"
+		code = code .. TryToAddDebugToText(obj)
+		return code, 1
+	end
+}
 function EGPD2.Exporters.EGP.Export(fpath)
-	print("this would export \"" .. fpath .. "\" to EGP but i didnt code it yet")
+	local code = ""
+	code = code .. "@name EGPD2_" .. fpath .. "\n"
+	code = code .. "@inputs EGP:wirelink\n"
+	code = code .. "# Exported with lokachop's EGPDesigner2\n"
+	code = code .. "# https://github.com/lokachop/egpdesigner2\n\n"
+	code = code .. "if(first() | dupeFinished())\n"
+	code = code .. "{\n"
+
+	local id = 1
+
+	for k, v in pairs(EGPD2.Objects) do
+		local fine, ret1, ret2 = pcall(EGPD2.Exporters.EGP.ObjectCallables[v.type], v, id)
+		if not fine then
+			print("[ERROR] EXPORTING TO EGP; " .. ret1)
+			return
+		end
+		code = code .. ret1
+		id = id + ret2
+	end
+
+	code = code .. "}\n"
+	code = code .. "# Exported with lokachop's EGPDesigner2\n"
+	code = code .. "# https://github.com/lokachop/egpdesigner2\n\n"
+
+	love.filesystem.write("egp_" .. fpath .. ".txt", code)
+	love.system.openURL("file://" .. love.filesystem.getSaveDirectory())
 end
 
 EGPD2.Exporters.GPU = {}
 function EGPD2.Exporters.GPU.Export(fpath)
 	print("this would export \"" .. fpath .. "\" to wireGPU but i didnt code it yet")
 end
+
+
+
+
 
 local function DecodeObject(str)
 	local dataelements = {}

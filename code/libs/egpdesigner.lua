@@ -184,20 +184,22 @@ end
 function EGPD2.GetObjectCount()
 	local IDCount = 0
 	for k, v in pairs(EGPD2.Objects) do
-		local fine2, conv = pcall(love.math.isConvex, EGPD2.PolyData[k])
-		if not fine2 then
-			DumpTable(EGPD2.PolyData[k])
-			print("isConvex error!")
-		end
-
-		if v.type == "poly" and not conv then
-			local fine, dat = pcall(love.math.triangulate, EGPD2.PolyData[k])
-			if not fine then
-				print("GetObjectCount triangulate error!")
+		if v.type == "poly" then
+			local fine2, conv = pcall(love.math.isConvex, EGPD2.PolyData[k])
+			if not fine2 then
+				DumpTable(EGPD2.PolyData[k])
+				print("isConvex error!")
 			end
+			
+			if not conv then
+				local fine, dat = pcall(love.math.triangulate, EGPD2.PolyData[k])
+				if not fine then
+					print("GetObjectCount triangulate error!")
+				end
 
-			for i = 1, #dat do
-				IDCount = IDCount + 1
+				for i = 1, #dat do
+					IDCount = IDCount + 1
+				end
 			end
 		end
 
