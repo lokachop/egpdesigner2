@@ -54,14 +54,14 @@ EGPD2.Exporters.EGP.DebugOn = true
 local function TryToAddDebugToText(obj)
 	local code = "\n"
 	if EGPD2.Exporters.EGP.DebugOn then
-		code = code .. "#----BEGIN EGPD2 DEBUG----\n"
-		code = code .. "#OBJECT " .. obj.id .. "\n"
-		code = code .. "#TYPE " .. obj.type .. "\n"
-		code = code .. "#RGBA " .. obj.r .. ", " .. obj.g .. ", " .. obj.b .. ", " .. obj.a .. "\n"
-		code = code .. "#POSPREMOV " .. obj.x .. ", " .. obj.y .. "\n"
+		code = code .. "    #----BEGIN EGPD2 DEBUG----\n"
+		code = code .. "    #OBJECT " .. obj.id .. "\n"
+		code = code .. "    #TYPE " .. obj.type .. "\n"
+		code = code .. "    #RGBA " .. obj.r .. ", " .. obj.g .. ", " .. obj.b .. ", " .. obj.a .. "\n"
+		code = code .. "    #POSPREMOV " .. obj.x .. ", " .. obj.y .. "\n"
 		local tx, ty = EGPD2.Exporters.EGP.TranslatePos(obj.x, obj.y)
-		code = code .. "#POSPOSTMOV " .. tx .. ", " .. ty .. "\n"
-		code = code .. "#----END EGPD2 DEBUG----\n"
+		code = code .. "    #POSPOSTMOV " .. tx .. ", " .. ty .. "\n"
+		code = code .. "    #----END EGPD2 DEBUG----\n"
 	end
 
 	return code
@@ -72,8 +72,8 @@ EGPD2.Exporters.EGP.ObjectCallables = {
 		local code = "\n"
 		code = code .. TryToAddDebugToText(obj)
 		local tx, ty = EGPD2.Exporters.EGP.TranslatePos(obj.x, obj.y)
-		code = code .. "    EGP:egpBox(" .. id .. ", vec2(" .. tx .. ", " .. ty .. "), vec2(" .. obj.w .. ", " .. obj.h .. ")\n"
-		code = code .. "    EGP:egpColor(" .. id .. ", vec4(" .. obj.r .. ", " .. obj.g .. ", " .. obj.b .. ", " .. obj.a .. ")\n"
+		code = code .. "    EGP:egpBox(" .. id .. ", vec2(" .. tx .. ", " .. ty .. "), vec2(" .. obj.w .. ", " .. obj.h .. "))\n"
+		code = code .. "    EGP:egpColor(" .. id .. ", vec4(" .. obj.r .. ", " .. obj.g .. ", " .. obj.b .. ", " .. obj.a .. "))\n"
 		code = code .. "    EGP:egpAngle(" .. id .. ", " .. obj.rot .. ")\n"
 		return code, 1
 	end,
@@ -81,8 +81,8 @@ EGPD2.Exporters.EGP.ObjectCallables = {
 		local code = "\n"
 		code = code .. TryToAddDebugToText(obj)
 		local tx, ty = EGPD2.Exporters.EGP.TranslatePos(obj.x, obj.y)
-		code = code .. "    EGP:egpCircle(" .. id .. ", vec2(" .. tx .. ", " .. ty .. "), vec2(" .. obj.w .. ", " .. obj.h .. ")\n"
-		code = code .. "    EGP:egpColor(" .. id .. ", vec4(" .. obj.r .. ", " .. obj.g .. ", " .. obj.b .. ", " .. obj.a .. ")\n"
+		code = code .. "    EGP:egpCircle(" .. id .. ", vec2(" .. tx .. ", " .. ty .. "), vec2(" .. obj.w .. ", " .. obj.h .. "))\n"
+		code = code .. "    EGP:egpColor(" .. id .. ", vec4(" .. obj.r .. ", " .. obj.g .. ", " .. obj.b .. ", " .. obj.a .. "))\n"
 		code = code .. "    EGP:egpFidelity(" .. id .. ", vec4(" .. obj.fidelity .. ")\n"
 		return code, 1
 	end,
@@ -144,16 +144,16 @@ local function DecodeObject(str)
 	print("decoding object " .. str)
 	-- example object for reference
 	-- {|1:string|x:18|id:1|y:10|rot:0|drawtype:nopoly|g:255|b:255|w:16|r:255|h:16|a:255|type:box}
-	local data = string.gmatch(str, "|[%w:-]+")
+	local data = string.gmatch(str, "|[^|}]+") -- |[%w:-]+ old
 	for el in data do
-		--print("element " .. el)
-		local key = string.match(el, "[%w:-]+:")
-		local value = string.match(el, ":[%w:-]+")
-		key = string.sub(key, 1, #key - 1)
+		local key = string.match(el, "[%g]+:")
+		local value = string.match(el, ":[%g]+")
+
+		key = string.sub(key, 2, #key - 1)
 		value = string.sub(value, 2, #value)
 
 		print("found key " .. tostring(key) .. " with value " .. tostring(value) .. " inside")
-		if string.match(value, "[-%d]+") then
+		if tonumber(value) then
 			dataelements[key] = tonumber(value)
 		else
 			dataelements[key] = value
@@ -240,7 +240,9 @@ function EGPD2.Importer.Import(fpath)
 	EGPD2.SelectedSubPolyID = 1
 
 	EGPD2.Objects = DecodeObjectsLoop(objdata)
-	EGPD2.PolyData = DecodePolyData(polydata)
+	if polydata then
+		EGPD2.PolyData = DecodePolyData(polydata)
+	end
 
 	for k, v in pairs(EGPD2.Objects) do
 		if v.id > EGPD2.HighestID then

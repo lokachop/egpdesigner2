@@ -190,7 +190,7 @@ function EGPD2.GetObjectCount()
 				DumpTable(EGPD2.PolyData[k])
 				print("isConvex error!")
 			end
-			
+
 			if not conv then
 				local fine, dat = pcall(love.math.triangulate, EGPD2.PolyData[k])
 				if not fine then
