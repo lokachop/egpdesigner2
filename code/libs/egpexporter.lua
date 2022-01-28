@@ -98,8 +98,27 @@ EGPD2.Exporters.EGP.ObjectCallables = {
 	end,
 	["poly"] = function(obj, id)
 		local code = "\n"
+		local addCount = 1
 		code = code .. TryToAddDebugToText(obj)
-		return code, 1
+		
+
+		local fine, conv = pcall(love.math.isConvex, EGPD2.PolyData[obj.id])
+		if not fine then
+			print("err exporting polygon; isconvex fail!")
+			return "#error exporting polygon :/", 1
+		end
+		code = code .. "    EGP:egpPoly(" .. id
+		if conv then
+			for i = 1, #EGPD2.PolyData[obj.id], 2 do
+				local tx, ty = EGPD2.Exporters.EGP.TranslatePos(EGPD2.PolyData[obj.id][i], EGPD2.PolyData[obj.id][i + 1])
+				code = code .. ", vec2(" .. tx .. ", " .. ty .. ")"
+			end
+			code = code .. ")\n"
+			code = code .. "    EGP:egpColor(" .. id .. ", vec4(" .. obj.r .. ", " .. obj.g .. ", " .. obj.b .. ", " .. obj.a .. "))\n"
+		else
+
+		end
+		return code, addCount
 	end
 }
 function EGPD2.Exporters.EGP.Export(fpath)
