@@ -100,15 +100,15 @@ EGPD2.Exporters.EGP.ObjectCallables = {
 		local code = "\n"
 		local addCount = 1
 		code = code .. TryToAddDebugToText(obj)
-		
+
 
 		local fine, conv = pcall(love.math.isConvex, EGPD2.PolyData[obj.id])
 		if not fine then
 			print("err exporting polygon; isconvex fail!")
 			return "#error exporting polygon :/", 1
 		end
-		code = code .. "    EGP:egpPoly(" .. id
 		if conv then
+			code = code .. "    EGP:egpPoly(" .. id
 			for i = 1, #EGPD2.PolyData[obj.id], 2 do
 				local tx, ty = EGPD2.Exporters.EGP.TranslatePos(EGPD2.PolyData[obj.id][i], EGPD2.PolyData[obj.id][i + 1])
 				code = code .. ", vec2(" .. tx .. ", " .. ty .. ")"
@@ -116,6 +116,25 @@ EGPD2.Exporters.EGP.ObjectCallables = {
 			code = code .. ")\n"
 			code = code .. "    EGP:egpColor(" .. id .. ", vec4(" .. obj.r .. ", " .. obj.g .. ", " .. obj.b .. ", " .. obj.a .. "))\n"
 		else
+			addCount = addCount - 1
+			local fine2, tris = pcall(love.math.triangulate, EGPD2.PolyData[obj.id])
+			if not fine2 then
+				return "#error exporting polygon :/", 1
+			end
+
+			for k, v in pairs(tris) do
+				local t1, t2 = EGPD2.Exporters.EGP.TranslatePos(v[1], v[2])
+				local t3, t4 = EGPD2.Exporters.EGP.TranslatePos(v[3], v[4])
+				local t5, t6 = EGPD2.Exporters.EGP.TranslatePos(v[5], v[6])
+
+				local v1 = "vec2(" .. t1 .. ", " .. t2 .. "), "
+				local v2 = "vec2(" .. t3 .. ", " .. t4 .. "), "
+				local v3 = "vec2(" .. t5 .. ", " .. t6 .. ")"
+
+				code = code .. "    EGP:egpTriangle(" .. id + addCount .. ", " .. v1 .. v2 .. v3 .. ")\n"
+				code = code .. "    EGP:egpColor(" .. id + addCount .. ", vec4(" .. obj.r .. ", " .. obj.g .. ", " .. obj.b .. ", " .. obj.a .. "))\n"
+				addCount = addCount + 1
+			end
 
 		end
 		return code, addCount
