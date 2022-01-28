@@ -25,8 +25,10 @@ function EGPD2.Exporters.Text.Export(fpath)
 
 	exportStr = exportStr .. "<"
 	for k, v in pairs(EGPD2.PolyData) do
+		print("saving polygon with id " .. k)
 		exportStr = exportStr .. "{:" .. k .. ":"
 		for k2, v2 in pairs(v) do
+			print("|WRITEPOS; " .. v2)
 			exportStr = exportStr .. "(" .. v2
 		end
 		exportStr = exportStr .. "}"
@@ -92,10 +94,14 @@ local function DecodePolygon(str)
 
 	local idx = 1
 	local coords = {}
-	local decoords = string.gmatch(cleanedPoly, "%([%-]?[%d]+")
+	local decoords = string.gmatch(cleanedPoly, "%([%-]?[%d]+[%.]?[%d]*")
 	for pos in decoords do
 		local cpos = string.sub(pos, 2, #pos)
-		coords[idx] = tonumber(cpos)
+		cpos = math.floor(tonumber(cpos))
+		print("got pos; " .. cpos)
+
+		print("setting " .. idx .. " to " .. cpos)
+		coords[idx] = cpos
 		idx = idx + 1
 	end
 

@@ -104,8 +104,9 @@ EGPD2.ObjectCreators["poly"] = function(x, y, id)
 	tblcopy.y = math.floor(y)
 	tblcopy.id = id
 
-	EGPD2.PolyData[id] = {x, y}
+	EGPD2.PolyData[id] = {math.floor(x), math.floor(y)}
 	EGPD2.PushObject(tblcopy, id)
+	EGPD2.SelectedSubPolyID = 1
 	EGPD2.CurrentMode = "drawpoly"
 end
 
@@ -171,11 +172,25 @@ function EGPD2.SafeDelete(id)
 	end
 end
 
+local function DumpTable(tbl)
+	print("----BEGIN TABLE DUMP----")
+	for k, v in pairs(tbl) do
+		print("[" .. k .. "]: " .. tostring(v))
+	end
+	print("----END TABLE DUMP----")
+end
+
 
 function EGPD2.GetObjectCount()
 	local IDCount = 0
 	for k, v in pairs(EGPD2.Objects) do
-		if v.type == "poly" and not love.math.isConvex(EGPD2.PolyData[k])  then
+		local fine2, conv = pcall(love.math.isConvex, EGPD2.PolyData[k])
+		if not fine2 then
+			DumpTable(EGPD2.PolyData[k])
+			print("isConvex error!")
+		end
+
+		if v.type == "poly" and not conv then
 			local fine, dat = pcall(love.math.triangulate, EGPD2.PolyData[k])
 			if not fine then
 				print("GetObjectCount triangulate error!")

@@ -72,9 +72,13 @@ EGPOBJR.ObjectCallables["poly"] = function(obj)
 
 	love.graphics.setColor(obj.r / 255, obj.g / 255, obj.b / 255, (obj.a / 255) * (EGPD2.RenderTransparency / 255))
 
+	local fine1, conv = pcall(love.math.isConvex, polyData)
+	if not fine1 then
+		print("error checking convex; " .. conv)
+		return
+	end
 
-
-	if love.math.isConvex(polyData) then
+	if conv then
 		-- is  convex we can skip expensive triangulation
 		love.graphics.polygon("fill", polyData)
 	else
