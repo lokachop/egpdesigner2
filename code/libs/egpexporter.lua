@@ -74,7 +74,7 @@ EGPD2.Exporters.EGP.ObjectCallables = {
 		local tx, ty = EGPD2.Exporters.EGP.TranslatePos(obj.x, obj.y)
 		code = code .. "    EGP:egpBox(" .. id .. ", vec2(" .. tx .. ", " .. ty .. "), vec2(" .. obj.w .. ", " .. obj.h .. "))\n"
 		code = code .. "    EGP:egpColor(" .. id .. ", vec4(" .. obj.r .. ", " .. obj.g .. ", " .. obj.b .. ", " .. obj.a .. "))\n"
-		code = code .. "    EGP:egpAngle(" .. id .. ", " .. obj.rot .. ")\n"
+		code = code .. "    EGP:egpAngle(" .. id .. ", -" .. obj.rot .. ")\n"
 		return code, 1
 	end,
 	["circle"] = function(obj, id)
@@ -83,16 +83,17 @@ EGPD2.Exporters.EGP.ObjectCallables = {
 		local tx, ty = EGPD2.Exporters.EGP.TranslatePos(obj.x, obj.y)
 		code = code .. "    EGP:egpCircle(" .. id .. ", vec2(" .. tx .. ", " .. ty .. "), vec2(" .. obj.w .. ", " .. obj.h .. "))\n"
 		code = code .. "    EGP:egpColor(" .. id .. ", vec4(" .. obj.r .. ", " .. obj.g .. ", " .. obj.b .. ", " .. obj.a .. "))\n"
-		code = code .. "    EGP:egpFidelity(" .. id .. ", vec4(" .. obj.fidelity .. ")\n"
+		code = code .. "    EGP:egpFidelity(" .. id .. ", " .. obj.fidelity .. ")\n"
 		return code, 1
 	end,
 	["text"] = function(obj, id)
 		local code = "\n"
 		code = code .. TryToAddDebugToText(obj)
 		local tx, ty = EGPD2.Exporters.EGP.TranslatePos(obj.x, obj.y)
-		code = code .. "    EGP:egpText(" .. id .. ", " .. obj.message .. "vec2(" .. tx .. ", " .. ty .. "))\n"
+		code = code .. "    EGP:egpText(" .. id .. ", \"" .. obj.message .. "\", vec2(" .. tx .. ", " .. ty .. "))\n"
 		code = code .. "    EGP:egpAlign(" .. id .. ", " .. obj.alignx .. ", " .. obj.aligny .. ")\n"
-		code = code .. "    EGP:egpColor(" .. id .. ", vec4(" .. obj.r .. ", " .. obj.g .. ", " .. obj.b .. ", " .. obj.a .. ")\n"
+		code = code .. "    EGP:egpSize(" .. id .. ", " .. obj.fontsize .. ")\n"
+		code = code .. "    EGP:egpColor(" .. id .. ", vec4(" .. obj.r .. ", " .. obj.g .. ", " .. obj.b .. ", " .. obj.a .. "))\n"
 		return code, 1
 	end,
 	["poly"] = function(obj, id)
@@ -107,7 +108,7 @@ function EGPD2.Exporters.EGP.Export(fpath)
 	code = code .. "@inputs EGP:wirelink\n"
 	code = code .. "# Exported with lokachop's EGPDesigner2\n"
 	code = code .. "# https://github.com/lokachop/egpdesigner2\n\n"
-	code = code .. "if(first() | dupeFinished())\n"
+	code = code .. "if(first() | dupefinished())\n"
 	code = code .. "{\n"
 
 	local id = 1
@@ -125,6 +126,11 @@ function EGPD2.Exporters.EGP.Export(fpath)
 	code = code .. "}\n"
 	code = code .. "# Exported with lokachop's EGPDesigner2\n"
 	code = code .. "# https://github.com/lokachop/egpdesigner2\n\n"
+
+	code = code .. "if(~EGP)\n"
+	code = code .. "{\n"
+	code = code .. "    reset()\n"
+	code = code .. "}\n"
 
 	love.filesystem.write("egp_" .. fpath .. ".txt", code)
 	love.system.openURL("file://" .. love.filesystem.getSaveDirectory())
