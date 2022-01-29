@@ -233,13 +233,13 @@ function EGPD2.HandleDrawPoly(x, y, button)
 
 		EGPD2.SelectedSubPolyID = EGPD2.Math.Clamp(EGPD2.SelectedSubPolyID + 2, 1, 256)
 	elseif button == 2 then
+		EGPD2.SelectedSubPolyID = EGPD2.Math.Clamp(EGPD2.SelectedSubPolyID - 2, 1, 256)
 		local spoly = EGPD2.Math.Clamp(EGPD2.SelectedSubPolyID, 1, 256)
 
 		--EGPD2.PolyData[EGPD2.SelectedObject][spoly] = nil
 		--EGPD2.PolyData[EGPD2.SelectedObject][spoly] = nil
 		table.remove(EGPD2.PolyData[EGPD2.SelectedObject], spoly)
 		table.remove(EGPD2.PolyData[EGPD2.SelectedObject], spoly)
-		EGPD2.SelectedSubPolyID = EGPD2.Math.Clamp(EGPD2.SelectedSubPolyID - 2, 1, 256)
 	end
 end
 

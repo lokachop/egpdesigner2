@@ -148,7 +148,7 @@ function EGPD2.Exporters.EGP.Export(fpath)
 	code = code .. "# https://github.com/lokachop/egpdesigner2\n\n"
 	code = code .. "if(first() | dupefinished())\n"
 	code = code .. "{\n"
-
+	code = code .. "    EGP:egpClear()\n"
 	local id = 1
 
 	for k, v in pairs(EGPD2.Objects) do
