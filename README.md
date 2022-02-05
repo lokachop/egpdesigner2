@@ -51,6 +51,8 @@ Why doesn't it let me export/save?
 Why doesn't loading work?
 - You either made a typo or my loader broke, check the console for more info
 
+Why doesn't exporting to GPU do anything?
+- Exporting to GPU is currently unfinished
 
 If you encounter any unlisted problems, feel free to message me over discord (Lokachop#5862)
 
