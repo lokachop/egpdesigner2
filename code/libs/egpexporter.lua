@@ -94,6 +94,7 @@ EGPD2.Exporters.EGP.ObjectCallables = {
 		code = code .. "    EGP:egpAlign(" .. id .. ", " .. obj.alignx .. ", " .. obj.aligny .. ")\n"
 		code = code .. "    EGP:egpSize(" .. id .. ", " .. obj.fontsize .. ")\n"
 		code = code .. "    EGP:egpColor(" .. id .. ", vec4(" .. obj.r .. ", " .. obj.g .. ", " .. obj.b .. ", " .. obj.a .. "))\n"
+		code = code .. "    EGP:egpAngle(" .. id .. ", -" .. obj.rot .. ")\n"
 		return code, 1
 	end,
 	["poly"] = function(obj, id)
